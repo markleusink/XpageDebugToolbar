@@ -1,0 +1,4 @@
+XpageDebugToolbar
+=================
+
+XPage Debug Toolbar
