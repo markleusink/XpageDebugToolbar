@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom" style="padding-top:70.0px">
+
+
+	
+	
+	
+	
+	<xp:this.beforeRenderResponse><![CDATA[#{javascript:var b = [
+	{ os_dba : "sears auto", id : "object3", name : "IBM"},
+	{ os_dba : "searc", id : "object4", name : "cMicrosoft"},
+	{ os_dba : "dillards", id : "object2", name : "Oracle"},
+	{ os_dba : "macys", id : "object5", name : "Facebook"},
+	{ os_dba : "talbots", id : "object1", name : "aTwitter"}
+];
+
+dBar.info("0: " + typeof b );
+dBar.dump( b);
+
+viewScope.arrayObject = b;
+
+dBar.info("2: " + typeof viewScope.arrayObject);
+dBar.dump(viewScope.arrayObject);
+
+dBar.error("1");
+dBar.error("2");
+dBar.error("3");}]]></xp:this.beforeRenderResponse>
+	
+	<xc:ccDebugToolbar defaultCollapsed="false" collapseTo="left"></xc:ccDebugToolbar>
+	<xp:repeat id="repeat1" rows="30"
+		value="#{javascript:viewScope.arrayObject}" var="o">
+		<xp:text escape="true" id="computedField3" value="#{o.os_dba}"></xp:text>
+		<xp:text escape="true" id="computedField1" value="#{o.name}"></xp:text>
+		<xp:text escape="true" id="computedField2" value="#{o.id}"></xp:text>
+		<br /><br />
+		
+
+	</xp:repeat>
+</xp:view>
