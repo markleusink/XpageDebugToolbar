@@ -98,14 +98,19 @@
 			30px;}
 
 			div.dBar table.grid td.small { width: 50px;
-			white-space: nowrap } div.dBar table.grid td.label {
-			background: #eeeeee; font-weight: bold; 
-			font-size: inherit; 
-			color: inherit; 
-			text-transform: inherit; 
-			width: 270px;
-			text-shadow: inherit;
+			white-space: nowrap } 
+			div.dBar table.grid td.label {
+				background: #eeeeee; font-weight: bold; 
+				font-size: inherit; 
+				color: inherit; 
+				text-transform: inherit; 
+				width: 150px;
+				text-shadow: inherit;
 			}
+			div.dBar table.grid td.wide {
+				width: 270px;
+			}
+			
 			div.dBar table.grid th { background: #cccccc;
 			font-weight: bold; padding-top: 5px; text-transform:
 			uppercase }
@@ -340,7 +345,7 @@
 					<li>
 						<xp:link escape="true" id="link11">
 							<xp:this.styleClass><![CDATA[#{javascript:( dBar.getActiveTab().equals("customVars") ? "selected" : "")}]]></xp:this.styleClass>
-							<xp:this.text><![CDATA[Java & environment]]></xp:this.text>
+							<xp:this.text><![CDATA[Environment & Java]]></xp:this.text>
 							<xp:eventHandler event="onclick"
 								submit="true" refreshMode="partial" execId="debugToolbar"
 								execMode="partial" refreshId="debugToolbar" immediate="true">
@@ -600,7 +605,7 @@
 						</xp:this.facets>
 
 						<tr>
-							<td class="label">
+							<td class="label wide">
 
 								<div class="clear">
 
@@ -667,32 +672,43 @@
 					
 					<div style="float: left">
 
-					log file:&#160;
-					<xp:comboBox id="comboBoxLogFile" value="#{dBar.selectedLogFile}">
-						<xp:selectItem itemLabel="- select a file -" itemValue=""></xp:selectItem>
-						<xp:selectItems value="#{dBar.logFileOptions}"></xp:selectItems>
-						<xp:eventHandler event="onchange" submit="true" refreshMode="partial"
-							refreshId="logFiles" disableValidators="true" execId="debugToolbar"
-							execMode="partial">
-							<xp:this.action><![CDATA[#{javascript:dBar.showFileContents()}]]></xp:this.action>
-							<xp:this.onStart><![CDATA[dojo.html.set(dojo.byId("#{id:logFileContents}"), "Loading...");]]></xp:this.onStart>
-						</xp:eventHandler></xp:comboBox>
+						<strong>(log) File:</strong>&#160;
+						<xp:comboBox id="comboBoxLogFile" value="#{dBar.selectedLogFile}">
+								<xp:selectItem itemLabel="- select a file -" itemValue=""></xp:selectItem>
+								<xp:selectItems value="#{dBar.logFileOptions}"></xp:selectItems>
+								<xp:eventHandler event="onchange" submit="true" refreshMode="partial"
+									refreshId="logFiles" disableValidators="true" execId="debugToolbar"	execMode="partial">
+								<xp:this.action><![CDATA[#{javascript:dBar.showFileContents()}]]></xp:this.action>
+								<xp:this.onStart><![CDATA[dojo.html.set(dojo.byId("#{id:logFileContents}"), "Loading...");]]></xp:this.onStart>
+						</xp:eventHandler></xp:comboBox>&#160;
+						<xp:link escape="true" text="refresh list" id="link37">
+							<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="logFiles" immediate="true" execMode="partial" execId="logFiles">
+								<xp:this.action><![CDATA[#{javascript:dBar.clearLogFileOptions()}]]></xp:this.action>
+							</xp:eventHandler></xp:link>
 					</div>
 					
-					<div style="float: left; padding-left: 20px;">
+					<div style="float: left; padding-left: 25px;">
 					
 						<!-- recent files history -->
-						Recent files:&#160;	
+						<strong>Recent files:</strong>&#160;	
 						
+						<xp:text escape="true" disableTheme="true" value="no recent files found"
+							rendered="#{javascript:!dBar.hasRecentFiles()}">
+						</xp:text>
+
 						<xp:repeat disableOutputTag="true" id="repeat1" rows="30" value="#{dBar.logFileHistory}" indexVar="index" var="fileHistoryEntry">
 							<xp:link escape="true" id="link41" disableTheme="true"
-								text="#{javascript:@RightBack(fileHistoryEntry, java.io.File.separator)}">
-								<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="logFileContents" execId="debugToolbar" immediate="true">
+								title="#{javascript:@RightBack(fileHistoryEntry, java.io.File.separator)}">
+								<xp:this.text><![CDATA[#{javascript:var f = @RightBack(fileHistoryEntry, java.io.File.separator);
+
+return (f.length>20 ? @Left(f, 20) : f); }]]></xp:this.text>
+								<xp:eventHandler event="onclick" submit="true" refreshMode="partial"
+									refreshId="logFiles" execId="logFiles" execMode="partial" disableValidators="true">
 									<xp:this.action><![CDATA[#{javascript:dBar.setSelectedLogFile(fileHistoryEntry); dBar.showFileContents()}]]></xp:this.action>
 									<xp:this.onStart><![CDATA[dojo.html.set(dojo.byId("#{id:logFileContents}"), "Loading...");]]></xp:this.onStart>
 								</xp:eventHandler>
 							</xp:link>
-							
+
 							<xp:text disableTheme="true" escape="false" value=" | ">
 								<xp:this.rendered><![CDATA[#{javascript:index<(dBar.getLogFileHistory().size()-1)}]]></xp:this.rendered>
 							</xp:text>
@@ -737,107 +753,110 @@ r
 				<!-- custom variables -->
 				<xp:div styleClass="content">
 					<xp:this.rendered><![CDATA[#{javascript:dBar.getActiveTab().equals("customVars")}]]></xp:this.rendered>
-
-					<xp:repeat id="repeat2" rows="10000" var="customEntry" style="margin-bottom: 10px;">
-						<xp:this.value><![CDATA[#{javascript:dBar.getCustomVars()}]]></xp:this.value>
-
-						<xp:this.facets>
-							<xp:text xp:key="header" escape="false" disableTheme="true">
-								<xp:this.value><![CDATA[<table class="grid"><tbody>]]></xp:this.value>
-							</xp:text>
-							<xp:text xp:key="footer" escape="false"	disableTheme="true">
-								<xp:this.value><![CDATA[</tbody></table>]]></xp:this.value>
-							</xp:text>
-						</xp:this.facets>
-
-						<!-- section titles -->
-						<xp:tr>
-							<xp:this.rendered><![CDATA[#{javascript:customEntry.key.equals("title")}]]></xp:this.rendered>
-
-							<th colspan="2">
-								<xp:text escape="true"
-									disableTheme="true" value="#{javascript:customEntry.value}">
-								</xp:text>
-							</th>
-						</xp:tr>
-
-						<!-- values -->
-						<xp:tr>
-							<xp:this.rendered><![CDATA[#{javascript:!customEntry.key.equals("title")}]]></xp:this.rendered>
-
-							<td class="label">
-								<xp:text escape="true"
-									disableTheme="true" value="#{javascript:customEntry.key}">
-								</xp:text>
-							</td>
-
-							<td>
-								<xp:text escape="false"
-									disableTheme="true" value="#{javascript:customEntry.value}">
-								</xp:text>
-							</td>
-						</xp:tr>
-					</xp:repeat>
 					
-					<div style="margin-bottom: 10px;">
-						<div style="font-weight:bold; margin-bottom: 3px">Persistent logging</div>
-					
-						<table class="grid"><tbody>
-							<tr><td class="label">status</td><td>
-<xp:text escape="true" id="computedField3">
-	<xp:this.value><![CDATA[#{javascript:(dBar.isLogEnabled() ? "enabled" : "disabled")}]]></xp:this.value>
-</xp:text></td></tr>
-							<tr><td class="label">database path</td><td>
-<xp:text rendered="#{!dBar.logDbValid}" escape="true" id="computedField8" value="#{dBar.logDbPath}"></xp:text>
-<xp:link rendered="#{dBar.logDbValid}" escape="true" text="#{dBar.logDbPath}" id="link36" target="_blank"><xp:this.value><![CDATA[#{javascript:"/.ibmxspres/domino/" + dBar.getLogDbPath().replaceAll("\\\\", "/");}]]></xp:this.value></xp:link>
+					<div style="float:left; margin-right: 15px;">
+						<div style="font-weight:bold; margin-bottom: 3px">Environment</div>
 
-<xp:image id="image3" title="#{javascript:this.getAlt()}" style="margin-left: 3px;">
-	<xp:this.url><![CDATA[#{javascript:"/.ibmxspres/domino/icons/" + (dBar.logDbValid ? "vwicn114.gif" : "vwicn115.gif")}]]></xp:this.url>
-	<xp:this.alt><![CDATA[#{javascript:(dBar.logDbValid ? "Valid database" : "Invalid database")}]]></xp:this.alt>
-	</xp:image>
-
-</td></tr>
-<tr><td class="label">log level</td><td>
-	<xp:text escape="true" id="computedField9" value="#{dBar.logLevel}"></xp:text>
-</td></tr>
-							</tbody></table>
-							
-							<div style="margin-top: 3px">You can store messages from the toolbar in documents in the current or an external database. The fields used in this function are 
-							based on those used in the&#160;<a href="http://www.openntf.org/projects/pmt.nsf/ProjectLookup/OpenLog" target="_blank">OpenLog</a>&#160;project.</div> 
-							
+						<xp:repeat id="repeat2" rows="1000" var="customEntry" style="margin-bottom: 10px;">
+							<xp:this.value><![CDATA[#{javascript:dBar.getCustomVars()}]]></xp:this.value>
+	
+							<xp:this.facets>
+								<xp:text xp:key="header" escape="false" disableTheme="true">
+									<xp:this.value><![CDATA[<table class="grid"><tbody>]]></xp:this.value>
+								</xp:text>
+								<xp:text xp:key="footer" escape="false"	disableTheme="true">
+									<xp:this.value><![CDATA[</tbody></table>]]></xp:this.value>
+								</xp:text>
+							</xp:this.facets>
+	
+							<!-- section titles -->
+							<xp:tr>
+								<xp:this.rendered><![CDATA[#{javascript:customEntry.key.equals("title")}]]></xp:this.rendered>
+	
+								<th colspan="2">
+									<xp:text escape="true"
+										disableTheme="true" value="#{javascript:customEntry.value}">
+									</xp:text>
+								</th>
+							</xp:tr>
+	
+							<!-- values -->
+							<xp:tr>
+								<xp:this.rendered><![CDATA[#{javascript:!customEntry.key.equals("title")}]]></xp:this.rendered>
+	
+								<td class="label">
+									<xp:text escape="true"
+										disableTheme="true" value="#{javascript:customEntry.key}">
+									</xp:text>
+								</td>
+	
+								<td>
+									<xp:text escape="false"
+										disableTheme="true" value="#{javascript:customEntry.value}">
+									</xp:text>
+								</td>
+							</xp:tr>
+						</xp:repeat>
+						
 					</div>
 					
-					<xp:div id="java" style="margin-bottom: 10px">
-						<div style="font-weight:bold; margin-bottom: 3px">Java memory usage</div>
-						<xp:text escape="false" disableTheme="true">
-							<xp:this.value><![CDATA[#{javascript:var rt = java.lang.Runtime.getRuntime();
-var free = rt.freeMemory();
-var total = rt.totalMemory();
-var max = rt.maxMemory();
-var used = total-free;
+					<div style="float:left; width: 350px;">
+						<div style="font-weight:bold; margin-bottom: 3px">Persistent logging</div>
+				
+						<table class="grid"><tbody>
+							<tr><td class="label">status</td><td>
+								<xp:text escape="true" id="computedField3">
+									<xp:this.value><![CDATA[#{javascript:(dBar.isLogEnabled() ? "enabled" : "disabled")}]]></xp:this.value>
+								</xp:text></td></tr>
+								<tr>
+								<td class="label">database path</td><td>
+								<xp:text rendered="#{!dBar.logDbValid}" escape="true" id="computedField8" value="#{dBar.logDbPath}"></xp:text>
+								<xp:link rendered="#{dBar.logDbValid}" escape="true" text="#{dBar.logDbPath}" id="link36" target="_blank"><xp:this.value><![CDATA[#{javascript:"/.ibmxspres/domino/" + dBar.getLogDbPath().replaceAll("\\\\", "/");}]]></xp:this.value></xp:link>
+								
+									<xp:image id="image3" title="#{javascript:this.getAlt()}" style="margin-left: 3px;">
+									<xp:this.url><![CDATA[#{javascript:"/.ibmxspres/domino/icons/" + (dBar.logDbValid ? "vwicn114.gif" : "vwicn115.gif")}]]></xp:this.url>
+									<xp:this.alt><![CDATA[#{javascript:(dBar.logDbValid ? "Valid database" : "Invalid database")}]]></xp:this.alt>
+									</xp:image>
+								
+								</td></tr>
+								<tr><td class="label">log level</td><td>
+									<xp:text escape="true" id="computedField9" value="#{dBar.logLevel}"></xp:text>
+								</td></tr>
+						</tbody></table>
+						
+						<div style="margin-top: 3px">You can store messages from the toolbar in documents in the current or an external database. The fields used in this function are 
+						based on those used in the&#160;<a href="http://www.openntf.org/projects/pmt.nsf/ProjectLookup/OpenLog" target="_blank">OpenLog</a>&#160;project.</div> 
+						
+						<xp:div id="java" style="margin-top: 15px">
+							<div style="font-weight:bold; margin-bottom: 3px">Java memory usage</div>
+							
+							<xp:text escape="false" disableTheme="true">
+								<xp:this.value><![CDATA[#{javascript:var rt = java.lang.Runtime.getRuntime();
+	var free = rt.freeMemory();
+	var total = rt.totalMemory();
+	var max = rt.maxMemory();
+	var used = total-free;
+	
+	var barWidth = 300;
+	
+	totalW = (total/max) * barWidth;
+	maxW = barWidth - totalW.toFixed(0);
+	usedW = (used/total) * totalW.toFixed(0);
+	freeW = totalW - usedW.toFixed(0);
+	
+	"<div style=\"border: 1px solid silver; padding: 2px; height: 13px; width: " + barWidth + "px;\">" +
+	"<div style=\"height: 12px; width:" + usedW.toFixed(0) + "px; background: #D33939; float: left;\"></div>" +
+	"<div style=\"height: 12px; width:" + freeW.toFixed(0) + "px; background: #039B03; float: left;\"></div>" +
+	"<div style=\"height: 12px; width:" + maxW.toFixed(0) + "px; background: #FFFF6D; float: left;\"></div>" + 
+	"</div>" +
+	"<div>(maximum heap size: " + dBar.getReadableSize(max) + ")</div>"
+	
+	}]]></xp:this.value>
+	
+							</xp:text>
 
-var barWidth = 300;
-
-totalW = (total/max) * barWidth;
-maxW = barWidth - totalW.toFixed(0);
-usedW = (used/total) * totalW.toFixed(0);
-freeW = totalW - usedW.toFixed(0);
-
-"<div style=\"border: 1px solid silver; padding: 2px; height: 13px; width: " + barWidth + "px; float: left; margin-bottom:5px\">" +
-"<div style=\"height: 12px; width:" + usedW.toFixed(0) + "px; background: #D33939; float: left;\"></div>" +
-"<div style=\"height: 12px; width:" + freeW.toFixed(0) + "px; background: #039B03; float: left;\"></div>" +
-"<div style=\"height: 12px; width:" + maxW.toFixed(0) + "px; background: #FFFF6D; float: left;\"></div>" + 
-"</div><div style=\"margin-left: 5px; float: left;\">(maximum heap size: " + dBar.getReadableSize(max) + ")</div>"
-
-}]]></xp:this.value>
-
-						</xp:text>
-						<br style="clear:both" />
-
-						<div style="float:left; margin-right: 15px">
-
-							<table class="grid"
-								style="margin-bottom: 5px;">
+						<div style="margin: 10px 0">
+							<table class="grid">
 								<tbody>
 
 									<xp:text escape="false"
@@ -855,11 +874,9 @@ freeW = totalW - usedW.toFixed(0);
 									</xp:text>
 								</tbody>
 							</table>
-
 						</div>
 
-						<div style="float: left">
-
+						<div style="margin: 10px 0">
 							<xp:link escape="true"
 								text="Run garbage collector" id="link28">
 								<xp:eventHandler event="onclick"
@@ -870,10 +887,10 @@ freeW = totalW - usedW.toFixed(0);
 							</xp:link>
 						</div>
 					</xp:div>
-					<br style="clear:both" />
+					</div>
 					
-
-
+					<br style="clear:both" />	
+					
 				</xp:div>
 
 				<!--  inspector -->

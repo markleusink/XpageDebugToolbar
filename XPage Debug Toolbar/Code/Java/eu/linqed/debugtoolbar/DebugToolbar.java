@@ -816,8 +816,8 @@ public class DebugToolbar implements Serializable {
 			customVars.add( new AbstractMap.SimpleEntry("groups", (groups.size()>0 ? groups.toString() : "(user not listed in any group)")));
 
 			customVars.add( new AbstractMap.SimpleEntry("title", "Browser"));
-			customVars.add( new AbstractMap.SimpleEntry("user agent", context.getUserAgent().getUserAgent()));
 			customVars.add( new AbstractMap.SimpleEntry("name", context.getUserAgent().getBrowser() + " " + context.getUserAgent().getBrowserVersion()));
+			customVars.add( new AbstractMap.SimpleEntry("user agent", context.getUserAgent().getUserAgent()));
 			customVars.add( new AbstractMap.SimpleEntry("language", context.getLocale().getDisplayName()	+ " (" + context.getLocaleString() + ")"));
 			customVars.add( new AbstractMap.SimpleEntry("timezone", context.getTimeZoneString()));
 
@@ -902,19 +902,6 @@ public class DebugToolbar implements Serializable {
 	}
 	public void setColor(String color) {
 		this.toolbarColor = color;
-	}
-	
-	public String getSelectedLogFile() {
-		return getTempVar(LOG_FILE_SELECTED);
-	}
-	public void setSelectedLogFile(String to) {
-		setTempVar(LOG_FILE_SELECTED, to);
-	}
-	public String getLogFileContents() {
-		return getTempVar(LOG_FILE_CONTENTS);
-	}
-	public void setLogFileContents(String to) {
-		setTempVar(LOG_FILE_CONTENTS, to);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -1051,9 +1038,9 @@ public class DebugToolbar implements Serializable {
 		
 		try {
 			
-			if (logFileOptions==null) {
+			if (logFileOptions==null || logFileOptions.size()==0) {
 
-				//list of included file extensions
+				//list of included file extensions for log folders
 				ArrayList<String> includeExt = new ArrayList<String>();
 				includeExt.add("xml");
 				includeExt.add("log");
@@ -1081,6 +1068,10 @@ public class DebugToolbar implements Serializable {
 		}
 		
 		return logFileOptions;
+	}
+	
+	public void clearLogFileOptions() {
+		if (logFileOptions != null) { logFileOptions.clear(); }
 	}
 	
 	//retrieve a list of log files from the specified folder (as a SelectItemGroup)
@@ -1115,17 +1106,36 @@ public class DebugToolbar implements Serializable {
 		return new SelectItemGroup( groupTitle, null, true, groupItems.toArray( new SelectItem[ groupItems.size() ] ) );
 	}
 	
+	public String getSelectedLogFile() {
+		return getTempVar(LOG_FILE_SELECTED);
+	}
+	public void setSelectedLogFile(String to) {
+		setTempVar(LOG_FILE_SELECTED, to);
+	}
+	public String getLogFileContents() {
+		return getTempVar(LOG_FILE_CONTENTS);
+	}
+	public void setLogFileContents(String to) {
+		setTempVar(LOG_FILE_CONTENTS, to);
+	}
+	
+	public boolean hasRecentFiles() {
+		return (logFileHistory != null && logFileHistory.size()>0);
+	}
+	
 	private void addToFileHistory(String fileName) {
 		if (logFileHistory==null) {
 			logFileHistory = new ArrayList<String>();
 		}
 		
-		logFileHistory.remove(fileName);		//always remove existing first (so its moved to the beginning)
-		
-		logFileHistory.add(0, fileName);
+		if (!logFileHistory.contains(fileName)) {
 			
-		if (logFileHistory.size() > 5) {		//store 5 files only
-			logFileHistory.remove(logFileHistory.size() - 1); // remove oldest element
+			//TODO: fix max nr of files1
+			if (logFileHistory.size() >= 5) {		//store last 5 files only
+				logFileHistory.remove(logFileHistory.size() - 1); // remove oldest element
+			}
+			
+			logFileHistory.add(0, fileName);
 		}
 		
 	}
@@ -1193,6 +1203,7 @@ public class DebugToolbar implements Serializable {
 		
 	}
 	
+	//checks if the selected file is the most recent version
 	public boolean isLogFileMostRecent() {
 		
 		String selected = getSelectedLogFile();
@@ -1203,9 +1214,6 @@ public class DebugToolbar implements Serializable {
 			
 			File f = new File(selected);
 			long lastModified = f.lastModified();
-			
-			info("2: " + lastModified);
-			info("3: read at " + logFileModifiedRead);
 			
 			return (logFileModifiedRead >= lastModified);
 		}

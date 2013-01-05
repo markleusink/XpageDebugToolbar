@@ -30,8 +30,6 @@ public class DemoClass implements Serializable {
 	private static final DebugToolbar dBar = DebugToolbar.get();
 	
 	public DemoClass() {
-		
-		dBar.debug("Constructor called in class DemoClass");
 	
 	}
 	
@@ -54,18 +52,19 @@ public class DemoClass implements Serializable {
 	public void faultyMethod() {
 	
 		Document doc = null;
+		
 		try {
 			
-			dBar.info("Here comes the error...", "DemoClass.faultyMethod");
 			@SuppressWarnings("unused")
 			String id = doc.getUniversalID();		//will throw a NullPointerException
 			
 		} catch (Exception e) {
 			
-			dBar.error(e);
-			
-			//or dump it like this:
-			//dBar.error(e, "DemoClass.methodThatThrowsAnError");
+			//if you're only using the toolbar in a class to log errors,
+			//you might want to call ik like this, so no object is created
+			//if no error occur
+			DebugToolbar.get().error(e, "DemoClass.faultyMethod");
+
 		}
 		
 	}

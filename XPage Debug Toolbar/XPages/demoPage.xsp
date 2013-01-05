@@ -12,6 +12,9 @@
 	</xp:this.resources>
 	
 	<style type="text/css">
+	h2 {
+		margin-bottom:10px;
+	}
 	h3 {
 		margin-bottom: 5px;
 		text-decoration: underline;
@@ -59,9 +62,7 @@
 		<xp:this.loaded><![CDATA[${javascript://load the contents of the sample page only if the debug toolbar is available
 typeof dBar != "undefined";}]]></xp:this.loaded>
 	
-		<p style="margin-bottom: 10px;">
-			XPage Debug Toolbar demo page. Take a look at the source of this page to see what you can do with it.
-		</p>
+		<h2>XPage Debug Toolbar demo page</h2>
 		
 		<xp:button value="Add sample data to scope variables" id="btnAddSampleData" dojoType="dijit.form.Button">
 			<xp:eventHandler event="onclick" submit="true" refreshMode="full">
