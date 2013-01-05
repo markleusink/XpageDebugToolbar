@@ -928,7 +928,7 @@ r
 							</td>
 							<td><xp:comboBox id="componentId" value="#{dBar.inspectorSelectedComponentId}">
 								<xp:selectItem itemValue="" itemLabel="" />
-								<xp:selectItems value="#{dBar.apiComponentIds}" />
+								<xp:selectItems value="#{dBar.componentIds}" />
 								<xp:eventHandler event="onchange" submit="true"
 									refreshMode="partial" refreshId="inspector" disableValidators="true">
 									<xp:this.script><![CDATA[var src = thisEvent.target || thisEvent.srcElement;
@@ -949,16 +949,13 @@ r
 							<td style="padding-left: 20px">
 								<strong>Previous:</strong></td>
 							<td>
-								<xp:comboBox id="previousExpressions"
-									value="#{viewScope.previousExpressions}">
+								<xp:comboBox id="cbPrevExp">
 									<xp:selectItem itemValue="" itemLabel="" />
-									<xp:selectItems value="#{sessionScope.previousExpressions}" />
+									<xp:selectItems value="#{dBar.inspectorHistory}" />
 									<xp:eventHandler event="onchange" submit="true"
 										refreshMode="partial" refreshId="inspector" disableValidators="true"
 										execMode="partial">
-										<xp:this.action><![CDATA[#{javascript:print("store prev");										
-										dBarHelper.storePreviousApiExpression();
-			dBar.setInspectorExpression(viewScope.previousExpressions);}]]></xp:this.action>
+										<xp:this.action><![CDATA[#{javascript:dBar.setInspectorExpression(this.getParent().getValue());}]]></xp:this.action>
 									</xp:eventHandler>
 								</xp:comboBox>
 							</td>
@@ -1092,7 +1089,7 @@ r
 											<xp:link escape="true" id="link42" text="#{method.name}">
 												<xp:eventHandler event="onclick" submit="true"
 													refreshMode="partial" refreshId="inspector" disableValidators="true">
-													<xp:this.action><![CDATA[#{javascript:var c = method.getName() + "(" + dBarHelper.getCanonicalNames(method.getParameterTypes()).join(", ") + ")";
+													<xp:this.action><![CDATA[#{javascript:var c = method.getName() + "(" + dBar.getCanonicalNames(method.getParameterTypes()).join(", ") + ")";
 dBar.addInspectorExpressionComponent(c);}]]></xp:this.action>
 													<xp:this.onComplete><![CDATA[try {
 	window.scrollTo(0,0);
@@ -1118,7 +1115,7 @@ dBar.addInspectorExpressionComponent(c);}]]></xp:this.action>
 										<br />
 										<xp:text style="margin-left: 10px;">
 											<xp:this.rendered><![CDATA[#{javascript:method.getExceptionTypes().length>0}]]></xp:this.rendered>
-											<xp:this.value><![CDATA[#{javascript:"throws " + dBarHelper.getCanonicalNames(method.getExceptionTypes()).join(", ");}]]></xp:this.value>
+											<xp:this.value><![CDATA[#{javascript:"throws " + dBar.getCanonicalNames(method.getExceptionTypes()).join(", ");}]]></xp:this.value>
 										</xp:text>
 
 									</td>

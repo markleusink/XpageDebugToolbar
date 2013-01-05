@@ -253,8 +253,7 @@ public class DebugToolbar implements Serializable {
 		if (entryName.startsWith(DebugToolbar.BEAN_NAME)) {
 			return true;
 		} else if ( entryName.equals("expressionInfo") ||
-				entryName.equals("expression") ||
-				entryName.equals("previousExpressions") ){
+				entryName.equals("expression")){
 			return true;
 		}
 
@@ -502,10 +501,13 @@ public class DebugToolbar implements Serializable {
 	public void setInspectorExpression( String expression ) {
 		String regex = "\\.(?![^(]*\\))";
 		inspectorExpression = new ArrayList<String>( Arrays.asList(expression.split(regex)) );
-		//inspectorSelectedComponentId = null;
+		
+		addExpressionToHistory();
 	}
 	public void addInspectorExpressionComponent( String c) {
 		inspectorExpression.add(c);
+		
+		addExpressionToHistory();
 	}
 	
 	//remove the last component of the expression
@@ -530,15 +532,22 @@ public class DebugToolbar implements Serializable {
 		this.inspectorSelectedComponentId = to; 
 	}
 	
-	public void addExpressionToHistory() {
-	//TODO: IMPLEMENT	
+	private void addExpressionToHistory() {
 		if (inspectorHistory == null) {
 			inspectorHistory = new ArrayList<String>();
 		}
 		
-		//inspectorHistory
+		if (!inspectorHistory.contains( getInspectorExpression())) {
+			inspectorHistory.add(getInspectorExpression() );
+		}
 		
-		
+		if (inspectorHistory.size() > 50) {
+			inspectorHistory.remove(inspectorHistory.size() - 1); // remove oldest element
+		}
+	}
+	
+	public ArrayList<String> getInspectorHistory() {
+		return inspectorHistory;
 	}
 	
 	//retrieve a list of sorted methods for a class
@@ -938,9 +947,7 @@ public class DebugToolbar implements Serializable {
 	/*
 	 * read components ids from the view root
 	 */
-	public ArrayList<String> getApiComponentIds() {
-		
-		debug("updating api list...");
+	public ArrayList<String> getComponentIds() {
 		
 		try {
 			
@@ -1504,5 +1511,19 @@ public class DebugToolbar implements Serializable {
 		}
 		
 	}
+	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<String> getCanonicalNames( Class[] classCollection ) {
+		
+		ArrayList<String> result = new ArrayList<String>();
+		
+		for (Class c : classCollection) {
+			result.add( c.getCanonicalName() );
+		}
+		return result;
+		
+	}
 
+
+	
 }

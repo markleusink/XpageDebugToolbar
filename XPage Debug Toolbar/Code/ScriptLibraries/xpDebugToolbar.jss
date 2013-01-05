@@ -203,11 +203,6 @@ var dBarHelper = {
 	renderInspectorContents: function(){
 		
 		try {
-			//TODO:
-			dBar.addExpressionToHistory();
-			
-			this.storePreviousApiExpression();
-			
 			// Reset exception- and expression info
 			viewScope.remove( 'exception' );
 			viewScope.remove( 'expressionInfo' );			
@@ -284,10 +279,7 @@ var dBarHelper = {
 					className: className,	
 					value: expressionValue
 				});
-				
-				
-				
-				viewScope.remove( 'previousExpressions' );
+
 			}
 			
 			dBar.debug("done");
@@ -330,31 +322,6 @@ var dBarHelper = {
 			dBar.error(e);
 		}
 		
-	},
-	
-	getCanonicalNames : function( classCollection ) {
-		var result = [];
-		for (var c=0; c<classCollection.length; c++) {
-			result.push( classCollection[c].getCanonicalName() );
-		}
-		return result;
-	},
-	
-	storePreviousApiExpression: function(){
-		try {
-			var previousExpression = viewScope.expression;
-			if( !previousExpression ){ return; }
-			
-			var previousExpressions = sessionScope.previousExpressions || [];
-			previousExpressions.unshift( @Left( previousExpression, 30 ) + '|' + previousExpression );
-			if( previousExpressions.length > 1 ){
-				previousExpressions = @Trim( @Unique( previousExpressions ) );
-			}
-			
-			sessionScope.put( 'previousExpressions', previousExpressions );			
-		} catch( e ){
-			dBar.error(e, "inspectorMessages" );
-		}
 	},
 	
 	getExceptionString: function( exception ){
