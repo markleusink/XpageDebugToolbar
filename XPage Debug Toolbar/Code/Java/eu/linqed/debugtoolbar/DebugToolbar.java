@@ -152,7 +152,7 @@ public class DebugToolbar implements Serializable {
 	@SuppressWarnings("unchecked")
 	public DebugToolbar() {
 		
-		System.out.println("dBar: construct");
+		//System.out.println("dBar: construct");
 		
 		try {
 			activeTab = "";		//default tab: none
@@ -197,7 +197,7 @@ public class DebugToolbar implements Serializable {
 			e.printStackTrace();
 		}
 		
-		System.out.println("dBar: construct done");
+		//System.out.println("dBar: construct done");
 		
 	}
 	
@@ -233,7 +233,7 @@ public class DebugToolbar implements Serializable {
 	
 	public void init(boolean defaultCollapsed, String color) {
 
-		System.out.println("calling init function");
+		//System.out.println("dBar: init");
 		
 		toolbarVisible = true;
 		
@@ -402,13 +402,11 @@ public class DebugToolbar implements Serializable {
 			addMessageToToolbar(message);
 			
 			//log to external database
-			//TODO: CHECK
 			writeLogEntry( message, null, Level.INFO, TYPE_EVENT );
 			
 		}
 
 	}
-
 	private void log( Throwable throwable, String msgContext) {
 
 		if (toolbarVisible || logEnabled) {		//abort if toolbar not visible/ no external logging enabled
@@ -416,8 +414,8 @@ public class DebugToolbar implements Serializable {
 			Message message = new Message(throwable, msgContext);
 			
 			addMessageToToolbar(message);
-		 
-			//TODO: CHECK
+			
+			//log to external database
 			writeLogEntry(message, throwable, Level.WARNING, TYPE_ERROR );
 		}
 		
@@ -450,6 +448,41 @@ public class DebugToolbar implements Serializable {
 		this.log(msg, msgContext, Message.TYPE_INFO);
 	}
 	public void debug(Object msg) {
+		
+Session		session = (Session) resolveVariable("session");
+System.out.println("got a session");
+
+
+try {
+	
+	System.out.println( " user "  + session.getEffectiveUserName() );
+
+	session.recycle();
+	System.out.println("recycled...");
+	
+	System.out.println(session.getEffectiveUserName() );
+	System.out.println("werkt...");
+	
+	System.out.println(session.getNotesVersion());
+	System.out.println("werkt...");
+	
+	System.out.println(session.getPlatform());
+	System.out.println("werkt...");
+	
+	System.out.println(session.getCurrentDatabase());
+	System.out.println("werkt...");
+	
+	System.out.println(session.getUserGroupNameList());
+	System.out.println("werkt...");
+	
+	System.out.println(session.isTrustedSession());
+	System.out.println("werkt...");
+	
+} catch (Exception e) {
+	e.printStackTrace();
+	
+}
+		
 		this.log(msg, null, Message.TYPE_DEBUG);
 	}
 	public void debug(Object msg, String msgContext) {
@@ -1047,24 +1080,51 @@ public class DebugToolbar implements Serializable {
 			
 			if (logFileOptions==null || logFileOptions.size()==0) {
 
-				//list of included file extensions for log folders
-				ArrayList<String> includeExt = new ArrayList<String>();
-				includeExt.add("xml");
-				includeExt.add("log");
-				
 				logFileOptions = new ArrayList<SelectItemGroup>();
 				
 				//files in workspace/logs folder (e.g. error-log files)
-				logFileOptions.add( getLogFilesList( "domino" + File.separator + "workspace" + File.separator + "logs" + File.separator,
-						"logs", includeExt) );
 				
+				//error logs
+				logFileOptions.add( getFilesOptions( "domino" + File.separator + "workspace" + File.separator + "logs" + File.separator,
+						"Error (logs)",
+						"error",
+						null) );
+				
+				//trace logs
+				logFileOptions.add( getFilesOptions( "domino" + File.separator + "workspace" + File.separator + "logs" + File.separator,
+						"Trace (logs)",
+						"trace",
+						null) );
+				
+				//other files
+				logFileOptions.add( getFilesOptions( "domino" + File.separator + "workspace" + File.separator + "logs" + File.separator,
+						"Other (logs)",
+						null,
+						new ArrayList<String>(Arrays.asList( ("error,trace").split(",") ))  ) );
+
 				//files in IBM_TECHNICAL_SUPPORT folder
-				logFileOptions.add( getLogFilesList( "IBM_TECHNICAL_SUPPORT" + File.separator,
-						"IBM_TECHNICAL_SUPPORT", includeExt) );
+				
+				//xpages logs
+				logFileOptions.add( getFilesOptions( "IBM_TECHNICAL_SUPPORT" + File.separator,
+						"XPages (IBM_TECHNICAL_SUPPORT)",
+						"xpages",
+						null) );
+				
+				//console logs
+				logFileOptions.add( getFilesOptions( "IBM_TECHNICAL_SUPPORT" + File.separator,
+						"Console (IBM_TECHNICAL_SUPPORT)",
+						"console", 
+						null) );
+				
+				logFileOptions.add( getFilesOptions( "IBM_TECHNICAL_SUPPORT" + File.separator,
+						"Other (IBM_TECHNICAL_SUPPORT)",
+						null,
+						new ArrayList<String>(Arrays.asList( ("xpages,console").split(",") ))  ) );
 				
 				//other files
 				ArrayList<SelectItem> groupItems = new ArrayList<SelectItem>();
 				groupItems.add( new SelectItem( dominoProgramDir + File.separator + "notes.ini", "notes.ini") );
+				groupItems.add( new SelectItem( dominoProgramDir + File.separator + "jvm" + File.separator + "lib" + File.separator + "security" + File.separator + "java.policy", "java.policy") );
 				logFileOptions.add( new SelectItemGroup( "other files", null, true, groupItems.toArray( new SelectItem[ groupItems.size() ] ) ) );
 				
 				
@@ -1081,36 +1141,68 @@ public class DebugToolbar implements Serializable {
 		if (logFileOptions != null) { logFileOptions.clear(); }
 	}
 	
-	//retrieve a list of log files from the specified folder (as a SelectItemGroup)
-	//relative to the domino\data folder
-	private SelectItemGroup getLogFilesList( String folder, String groupTitle, ArrayList<String> includeExt ) {
+	//retrieve a list of files from the specified folder relative to the domino\data folder (as a SelectItemGroup)
+	//optionally with an include/ exclude filter
+	private SelectItemGroup getFilesOptions( String folder, String groupTitle, String prefixInclude, ArrayList<String> prefixExclude) {
 		
 		ArrayList<SelectItem> groupItems = new ArrayList<SelectItem>();
+		ArrayList<FileInfo> logFilesInfoList = getFilesList( folder, prefixInclude, prefixExclude);
+			
+		for (FileInfo info : logFilesInfoList) {
+			groupItems.add( new SelectItem( dominoDataDir + File.separator + folder + info.getName(), info.getDescription()) );
+		}
+		
+		return new SelectItemGroup( groupTitle, null, true, groupItems.toArray( new SelectItem[ groupItems.size() ] ) );
+	}
+	
+	private ArrayList<FileInfo> getFilesList( String folder, String prefixInclude, ArrayList<String> prefixExclude ) {
+		
+		//list of included file extensions for log folders
+		ArrayList<String> includeExt = new ArrayList<String>();
+		includeExt.add("xml");
+		includeExt.add("log");
+		includeExt.add("txt");
+		
 		File dir = new File( dominoDataDir + File.separator + folder);
 		
-		ArrayList<FileInfo> logFilesInfoList = new ArrayList<FileInfo>();
+		ArrayList<FileInfo> filesInfoList = new ArrayList<FileInfo>();
 		
 		for (File f : dir.listFiles()) {
 			
 			if ( !f.isDirectory() && f.length()>0 ) {
 				
 				String name = f.getName();
-				String ext = name.substring( name.lastIndexOf(".")+1 );
+				String ext = name.substring( name.lastIndexOf(".")+1 ).toLowerCase();
 				
-				if (includeExt.contains(ext) ) {
-					logFilesInfoList.add( new FileInfo( f.getName(), f.lastModified(), f.length()));
+				if (includeExt.contains(ext)) {
+					
+					boolean include = true;
+					
+					if (prefixInclude != null) {
+						include = f.getName().startsWith(prefixInclude);
+						
+					} else if (prefixExclude != null) {
+						
+						for (String prefix : prefixExclude) {
+							if (f.getName().startsWith(prefix)) {
+								include = false;
+								break;
+							}
+						}
+					}
+					
+					if (include) {
+						filesInfoList.add( new FileInfo( f.getName(), f.lastModified(), f.length()));
+					}
 				}
 			}
 		}
 		
 		//sort the list of files descending by last modified
-		Collections.sort( logFilesInfoList);
+		Collections.sort( filesInfoList);
+
+		return filesInfoList;
 		
-		for (FileInfo info : logFilesInfoList) {
-			groupItems.add( new SelectItem( dominoDataDir + File.separator + folder + info.getName(), info.getDescription()) );
-		}
-		
-		return new SelectItemGroup( groupTitle, null, true, groupItems.toArray( new SelectItem[ groupItems.size() ] ) );
 	}
 	
 	public String getSelectedLogFile() {
@@ -1137,7 +1229,6 @@ public class DebugToolbar implements Serializable {
 		
 		if (!logFileHistory.contains(fileName)) {
 			
-			//TODO: fix max nr of files1
 			if (logFileHistory.size() >= 5) {		//store last 5 files only
 				logFileHistory.remove(logFileHistory.size() - 1); // remove oldest element
 			}
@@ -1340,7 +1431,7 @@ public class DebugToolbar implements Serializable {
 				
 			} else {
 				
-				System.out.println("RETURN LOG DB FROM CACHE");
+				System.out.println("return LOG DB from CACHE");
 				
 			}
 		} catch (Exception e) {
@@ -1382,7 +1473,7 @@ public class DebugToolbar implements Serializable {
 			
 			//abort if log db could not be opened/ not specified
 			if (logDbInvalid) {
-				System.out.println("can't write: invalid log db");
+				System.out.println("can't write to external log db: invalid db");
 				return;
 			}
 			
