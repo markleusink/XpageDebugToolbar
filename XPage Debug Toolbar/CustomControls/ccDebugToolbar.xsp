@@ -351,7 +351,7 @@
 					<li>
 						<xp:link escape="true" id="link11">
 							<xp:this.styleClass><![CDATA[#{javascript:( dBar.getActiveTab().equals("customVars") ? "selected" : "")}]]></xp:this.styleClass>
-							<xp:this.text><![CDATA[Environment & Java]]></xp:this.text>
+							<xp:this.text><![CDATA[environment & Java]]></xp:this.text>
 							<xp:eventHandler event="onclick"
 								submit="true" refreshMode="partial" execId="debugToolbar"
 								execMode="partial" refreshId="debugToolbar" immediate="true">
@@ -1204,7 +1204,7 @@ dBar.addInspectorExpressionComponent(c);}]]></xp:this.action>
 						<div class="aboutMe">
 							<table><tbody>
 								<tr>
-								<td><img src="http://www.gravatar.com/avatar/63776b75bfbba57c2c0073627030aca9.png" /></td>
+								<td><img src="http://secure.gravatar.com/avatar/80b0217f17f01b662fe26275fd625584?size=80" /></td>
 								<td>
 									The XPage Debug Toolbar (v3beta1) is created and maintained by Mark Leusink<br />
 									<br />
