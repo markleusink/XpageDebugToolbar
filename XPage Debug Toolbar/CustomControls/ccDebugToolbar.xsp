@@ -667,7 +667,7 @@
 				<xp:div styleClass="content" id="logFiles">
 					<xp:this.rendered><![CDATA[#{javascript:dBar.getActiveTab().equals("logs")}]]></xp:this.rendered>
 					
-					<div style="float: left">
+					<div>
 
 						<strong>(log) File:</strong>&#160;
 						<xp:comboBox id="comboBoxLogFile" value="#{dBar.selectedLogFile}">
@@ -682,38 +682,37 @@
 							<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="logFiles" immediate="true" execMode="partial" execId="logFiles">
 								<xp:this.action><![CDATA[#{javascript:dBar.clearLogFileOptions()}]]></xp:this.action>
 							</xp:eventHandler></xp:link>
-					</div>
 					
-					<div style="float: left; padding-left: 25px;">
-					
-						<!-- recent files history -->
-						<strong>Recent:</strong>&#160;	
+						<span style="padding-left: 25px">
 						
-						<xp:text escape="true" disableTheme="true" value="no recent files found"
-							rendered="#{javascript:!dBar.hasRecentFiles()}">
-						</xp:text>
-
-						<xp:repeat disableOutputTag="true" id="repeat1" rows="30" value="#{dBar.logFileHistory}" indexVar="index" var="fileHistoryEntry">
-							<xp:link escape="true" id="link41" disableTheme="true"
-								title="#{javascript:@RightBack(fileHistoryEntry, java.io.File.separator)}">
-								<xp:this.text><![CDATA[#{javascript:var f = @RightBack(fileHistoryEntry, java.io.File.separator);
-
-return (f.length>20 ? @Left(f, 20) : f); }]]></xp:this.text>
-								<xp:eventHandler event="onclick" submit="true" refreshMode="partial"
-									refreshId="logFiles" execId="logFiles" execMode="partial" disableValidators="true">
-									<xp:this.action><![CDATA[#{javascript:dBar.setSelectedLogFile(fileHistoryEntry); dBar.showFileContents()}]]></xp:this.action>
-									<xp:this.onStart><![CDATA[dojo.html.set(dojo.byId("#{id:logFileContents}"), "Loading...");]]></xp:this.onStart>
-								</xp:eventHandler>
-							</xp:link>
-
-							<xp:text disableTheme="true" escape="false" value=" | ">
-								<xp:this.rendered><![CDATA[#{javascript:index<(dBar.getLogFileHistory().size()-1)}]]></xp:this.rendered>
+							<!-- recent files history -->
+							<strong>Recent:</strong>&#160;	
+							
+							<xp:text escape="true" disableTheme="true" value="no recent files found"
+								rendered="#{javascript:!dBar.hasRecentFiles()}">
 							</xp:text>
-						</xp:repeat>
-						
+	
+							<xp:repeat disableOutputTag="true" id="repeat1" rows="30" value="#{dBar.logFileHistory}" indexVar="index" var="fileHistoryEntry">
+								<xp:link escape="true" id="link41" disableTheme="true"
+									title="#{javascript:@RightBack(fileHistoryEntry, java.io.File.separator)}">
+									<xp:this.text><![CDATA[#{javascript:var f = @RightBack(fileHistoryEntry, java.io.File.separator);
+	
+	return (f.length>20 ? @Left(f, 20) : f); }]]></xp:this.text>
+									<xp:eventHandler event="onclick" submit="true" refreshMode="partial"
+										refreshId="logFiles" execId="logFiles" execMode="partial" disableValidators="true">
+										<xp:this.action><![CDATA[#{javascript:dBar.setSelectedLogFile(fileHistoryEntry); dBar.showFileContents()}]]></xp:this.action>
+										<xp:this.onStart><![CDATA[dojo.html.set(dojo.byId("#{id:logFileContents}"), "Loading...");]]></xp:this.onStart>
+									</xp:eventHandler>
+								</xp:link>
+	
+								<xp:text disableTheme="true" escape="false" value=" | ">
+									<xp:this.rendered><![CDATA[#{javascript:index<(dBar.getLogFileHistory().size()-1)}]]></xp:this.rendered>
+								</xp:text>
+							</xp:repeat>
+							
+						</span>
+							
 					</div>
-					
-					<br style="clear:both" />	
 					
 					<xp:div id="logFileContents" style="margin-top:10px;">
 
