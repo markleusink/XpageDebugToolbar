@@ -1383,8 +1383,6 @@ public class DebugToolbar implements Serializable {
 			
 			if ( dbLog == null || DebugToolbar.isRecycled(dbLog) ) {
 				
-				System.out.println( ( dbLog == null ? "log db is null" : "log db is recycled") + " : reload");
-				
 				dbLog = getSession().getDatabase( serverName, logDbPath );
 				
 				if (dbLog == null) {		//still null: mark as invalid
@@ -1395,10 +1393,6 @@ public class DebugToolbar implements Serializable {
 					dbLog = null;
 					logDbValid = false;
 				}
-				
-			} else {
-				
-				System.out.println("return LOG DB from CACHE");
 				
 			}
 		} catch (Exception e) {

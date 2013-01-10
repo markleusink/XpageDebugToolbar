@@ -78,12 +78,9 @@
 			div.dBar ul.links a.selected { background: #B7B7B7;
 			text-decoration: none; }
 
-			div.dBar .contentWrapper { background: #B7B7B7;
-			color: #000000; padding: 5px;
-
-			} div.dBar .contentWrapper td { padding: 2px 2px 2px
-			0; } div.dBar .content { margin: 0; padding: 7px;
-			background: #ffffff; }
+			div.dBar .contentWrapper { background: #B7B7B7;	color: #000000; padding: 3px; }
+			div.dBar .contentWrapper td { padding: 2px 2px 2px 0; }
+			div.dBar .content { margin: 0; padding: 5px 9px 9px 9px; background: #ffffff; }
 
 			div.dBar table.grid { border-collapse: collapse; }
 			div.dBar table.grid th { background: #B7B7B7;
@@ -140,7 +137,7 @@
 			div.dBar table.dumped td { border-top: 1px solid
 			#CECECE; padding:1px 6px 1px 1px; margin:0;}
 			div.dBar table.dumped td.first { border-top: 0;}
-
+			div.dBar img { vertical-align:middle; margin: 0;}			
 			div.dBar img.faded { -khtml-opacity:.40; -moz-opacity:.40;
 			-ms-filter:"alpha(opacity=40)"; filter:alpha(opacity=40);
 			opacity:.40; }
@@ -158,11 +155,14 @@
 			}
 			
 			div.dBar .aboutMe {
-				margin: 15px; 
+				margin: 15px 15px 15px 25px; 
 				padding: 15px; 
 				width: 450px; 
-				background: #3C3A59;
 				color: #fff;
+				background: #444096;
+				-moz-box-shadow: 3px 3px 5px #000000;
+			    -webkit-box-shadow: 3px 3px 5px #000000;
+			    box-shadow: 3px 3px 5px #000000;
 			}
 			div.dBar .aboutMe a, div.dBar .aboutMe a:visited {
 				color: #fff;
@@ -1275,6 +1275,7 @@ dBar.addInspectorExpressionComponent(c);}]]></xp:this.action>
 					
 				</ul>
 			</xp:div>
+			
 		</xp:div>
 
 	</xp:panel>
