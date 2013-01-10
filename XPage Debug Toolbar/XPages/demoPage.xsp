@@ -189,7 +189,7 @@ setDemoScopeVariables();
 			<h3>Logging to an external (OpenLog) database</h3>
 			
 			<p>
-				The "Java &#38; environment" tab shows the settings for external logging. It is important to note that external logging will continue also if the toolbar is hidden.
+				The "environment &#38; Java" tab shows the settings for external logging. It is important to note that external logging will continue also if the toolbar is hidden.
 			</p>
 			<p>
 				Try hiding the toolbar using the button below. This does the same as the "remove" link in the toolbar.

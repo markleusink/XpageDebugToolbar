@@ -2,11 +2,11 @@
 <!DOCTYPE note SYSTEM 'xmlschemas/domino_8_5_3.dtd'>
 <note default='true' class='icon' xmlns='http://www.lotus.com/dxl' version='8.5'
  maintenanceversion='3.0' replicaid='C1257AC50045B72F'>
-<noteinfo noteid='126' unid='2B0A2D423F0338C2C125798400346635' sequence='1'>
+<noteinfo noteid='126' unid='2B0A2D423F0338C2C125798400346635' sequence='2'>
 <created><datetime>20120113T103220,37+01</datetime></created>
-<modified><datetime>20130104T152847,68+01</datetime></modified>
-<revised><datetime>20130104T152847,66+01</datetime></revised>
-<lastaccessed><datetime>20130104T152847,66+01</datetime></lastaccessed>
+<modified><datetime>20130106T143412,77+01</datetime></modified>
+<revised><datetime>20130106T143412,75+01</datetime></revised>
+<lastaccessed><datetime>20130106T143412,75+01</datetime></lastaccessed>
 <addedtofile><datetime>20130104T131528,50+01</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Mark Leusink/O=CITC</name><name>CN=Mark Leusink/O=LinQed</name><name
 >CN=Domino Administrator/O=LinQed</name><name>CN=Mark Leusink/O=LinQed</name><name
@@ -32,6 +32,6 @@ AAAAUEECICABAAD/////+A4DgA==
 <item name='$Flags'><text>J!7f</text></item>
 <item name='$FlagsNoRefresh'><text/></item>
 <item name='$Daos'><text>0</text></item>
-<item name='$TITLE'><text>XPage Debug Toolbar (v3beta1)
+<item name='$TITLE'><text>XPage Debug Toolbar v3
 </text></item></note>
 

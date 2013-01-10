@@ -230,22 +230,28 @@ var dBarHelper = {
 
 			} catch (e) {
 				
-				dBar.error("catch 1");
+				try {	//test as a class, but check first if it has a class 'syntax'
 				
-				//if (!mightBeAClass) {		//no need to inspect (might be a method)
-				//	eu.linqed.debugtoolbar.DebugToolbar.addInspectorMessage("Expression executed");
-				//	return;
-				//}
+					dBar.error("catch 1");
+				
+					if (expression.indexOf("(")>-1) {
+						eu.linqed.debugtoolbar.DebugToolbar.addInspectorMessage("Expression executed");
+						//return;
+						
+					} 
 				
 				exceptionString = this.getExceptionString( e );
 				
 				dBar.error("catch 1: " + exceptionString);
 				
-				try {	//test as a class, but check first if it is a class
-					dBar.debug("check 2: eval of " + 'new ' + expression + '()');
+				
+						//- not allowed: parentheses
+						//testcode: getComponent("buttonTestError1").setDisabled(true) -> void method, gaat hier fout want geen class
+						dBar.debug("check 2: eval of " + 'new ' + expression + '()');
+						
+						expressionClass = eval( 'new ' + expression + '()' ).getClass();
+						exceptionString = ''; //Reset in case evaluation is OK
 					
-					expressionClass = eval( 'new ' + expression + '()' ).getClass();
-					exceptionString = ''; //Reset in case evaluation is OK
 				} catch(e){		
 					dBar.debug("catch 2");
 					
@@ -255,7 +261,8 @@ var dBarHelper = {
 						expressionClass = java.lang.Class.forName( expression );
 						exceptionString = ''; //Reset in case evaluation is OK
 					} catch (e) {
-						exceptionString = "B " +  this.getExceptionString( e );										
+						exceptionString = "B " +  this.getExceptionString( e );
+						dBar.error(e)
 					}
 				}
 			}

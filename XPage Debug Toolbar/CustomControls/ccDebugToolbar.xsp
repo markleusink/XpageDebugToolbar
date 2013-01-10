@@ -24,8 +24,7 @@
 
 	<xp:this.beforePageLoad><![CDATA[#{javascript:if (typeof dBar != "undefined") {
 	dBar.init(compositeData.defaultCollapsed, compositeData.toolbarColor);
-} 
-	}]]></xp:this.beforePageLoad>
+}}]]></xp:this.beforePageLoad>
 
 	<xp:this.beforeRenderResponse><![CDATA[#{javascript:if( typeof dBar != "undefined" && dBar.getActiveTab().equals("inspector") ) {
 	dBarHelper.renderInspectorContents();
@@ -37,19 +36,21 @@
 		<a name="dBar" />
 
 		<style type="text/css">		
-			div.dBar { 
+			div.dBar {
+				font: normal 11px/normal Arial,​Helvetica,​sans-serif;
 				position: absolute;
 				z-index: 10000;
-				color: #ffffff;
-				font-size: 11px; 
+				color: #000000;
 				width: 100%; 
 				top: 0;
 				left: 0;
 				text-shadow: none;
-				line-height: normal;
+			}
+			div.dBar select, div.dBar input, div.dBar button, div.dBar label {
+				font: normal 11px/normal Arial,​Helvetica,​sans-serif;
 			}
 			div.dBar a, div.dBar a:visited { 
-				text-decoration: none; color: #0F04DB
+				text-decoration: none; color: #0F04DB;
 			}
 			div.dBar a:hover, div.dBar a:active { 
 				text-decoration: underline;
@@ -61,10 +62,7 @@
 			div.dBar .showToolbar { position: absolute; left: 0;
 			} 
 			div.dBar .toolbar { width: 100%; }
-			div.dBar .hideContent { padding-left: 3px; color:
-			#ffffff; } 
-			div.dBar .hideContent a { color: #fff;
-			font-weight: bold; line-height: 20px; }
+			div.dBar .hideContent { padding-left: 5px; } 
 			div.dBar .highlight { background: #FCFFB5;
 			font-style: italic; }
 
@@ -74,8 +72,7 @@
 			padding: 0; position: relative; vertical-align: top;
 			margin-right: 2px;
 
-			} div.dBar ul.links a { color: #ffffff; font-weight:
-			bold; border-left: 1px solid transparent; border-right: 1px
+			} div.dBar ul.links a { color: #ffffff; font-weight: bold; border-left: 1px solid transparent; border-right: 1px
 			solid transparent; display: block; padding: 0 5px; position:
 			relative; } div.dBar ul.links a:hover,
 			div.dBar ul.links a.selected { background: #B7B7B7;
@@ -191,19 +188,13 @@
 			
 			/*reset bootstrap styles*/
 			div.dBar label { display: inline; margin:0; }
-			div.dBar label, div.dBar input, div.dBar button, div.dBar select, div.dBar textarea {
-  				font-size: inherit;
-  				font-weight: normal;
-  				line-height: inherit;
-			}
 			div.dBar select {
 				padding: 0;
 			}
-
 		</style>
 
 		<xp:text escape="false" disableTheme="true">
-			<xp:this.value><![CDATA[#{javascript:"<style type=\"text/css\">div.dBar .bg { background: " + dBar.color + ";}</style>"}]]></xp:this.value>
+			<xp:this.value><![CDATA[#{javascript:"<style type=\"text/css\">div.dBar .bg { background: " + dBar.color + "; color: #ffffff;}</style>"}]]></xp:this.value>
 		</xp:text>
 		
 		<xp:div id="debugToolbar" styleClass="dBar">
@@ -444,7 +435,7 @@
 						<xp:this.facets>
 							<xp:text xp:key="header" disableTheme="true"
 								escape="false">
-								<xp:this.value><![CDATA[<table class="messages grid striped" style="width:100%; margin-top: 5px"><tbody>]]></xp:this.value>
+								<xp:this.value><![CDATA[<table class="messages striped" style="width:100%; margin-top: 5px"><tbody>]]></xp:this.value>
 							</xp:text>
 							<xp:text xp:key="footer" disableTheme="true"
 								escape="false">
@@ -816,8 +807,9 @@ r
 								</xp:text></td></tr>
 								<tr>
 								<td class="label">database path</td><td>
-								<xp:text rendered="#{!dBar.logDbValid}" escape="true" id="computedField8" value="#{dBar.logDbPath}"></xp:text>
-								<xp:link rendered="#{dBar.logDbValid}" escape="true" text="#{dBar.logDbPath}" id="link36" target="_blank"><xp:this.value><![CDATA[#{javascript:"/.ibmxspres/domino/" + dBar.getLogDbPath().replaceAll("\\\\", "/");}]]></xp:this.value></xp:link>
+									<xp:text rendered="#{!dBar.logDbValid}" escape="true" id="computedField8" value="#{dBar.logDbPath}"></xp:text>
+									<xp:link rendered="#{dBar.logDbValid}" escape="true" text="#{dBar.logDbPath}" id="link36" target="_blank"><xp:this.value><![CDATA[#{javascript:"/.ibmxspres/domino/" + dBar.getLogDbPath().replaceAll("\\\\", "/");}]]></xp:this.value>
+									</xp:link>
 								
 									<xp:image id="image3" title="#{javascript:this.getAlt()}" style="margin-left: 3px;">
 									<xp:this.url><![CDATA[#{javascript:"/.ibmxspres/domino/icons/" + (dBar.logDbValid ? "vwicn114.gif" : "vwicn115.gif")}]]></xp:this.url>
@@ -826,7 +818,7 @@ r
 								
 								</td></tr>
 								<tr><td class="label">log level</td><td>
-									<xp:text escape="true" id="computedField9" value="#{dBar.logLevel}"></xp:text>
+									<xp:text escape="false" disableTheme="true" value="#{dBar.logLevel}"></xp:text>
 								</td></tr>
 						</tbody></table>
 						
@@ -1204,9 +1196,9 @@ dBar.addInspectorExpressionComponent(c);}]]></xp:this.action>
 						<div class="aboutMe">
 							<table><tbody>
 								<tr>
-								<td><img src="http://secure.gravatar.com/avatar/80b0217f17f01b662fe26275fd625584?size=80" /></td>
+								<td><img width="80" height="80" src="http://secure.gravatar.com/avatar/80b0217f17f01b662fe26275fd625584?size=80" title="Hi !" alt="Hi !" /></td>
 								<td>
-									The XPage Debug Toolbar (v3beta1) is created and maintained by Mark Leusink<br />
+									The XPage Debug Toolbar (version 3) is created and maintained by Mark Leusink<br />
 									<br />
 										<a target="_blank" href="http://linqed.eu">
 											blog
@@ -1251,7 +1243,7 @@ dBar.addInspectorExpressionComponent(c);}]]></xp:this.action>
 				<div style="float:right">
 					<ul class="links">
 
-						<!-- about the toolbar -->
+						<!-- about -->
 						<li>
 							<xp:link escape="false" id="link19"
 								style="font-weight: normal" text="developed by Mark Leusink">

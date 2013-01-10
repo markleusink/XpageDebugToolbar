@@ -21,7 +21,8 @@
 	<style type="text/css">
 		body, form { font-family: Arial !important; font-size: 12px !important; background: #444444 !important; color: #ffffff !important; }
 		.content {padding: 4px; }
-		.settings { background: #eeeeee !important; color: #000000 !important;border: 1px solid black !important; padding: 5px !important; } 
+		.settings { background: #eeeeee !important; color: #000000 !important;border: 1px solid black !important; padding: 5px !important; }
+		label {display:inline; } 
 		
 		table.messages tr { vertical-align: top !important; }
 		table.messages tr:nth-child(even) {

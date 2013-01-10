@@ -16,10 +16,6 @@ package eu.linqed.debugtoolbar;
  * ANY KIND, either express or implied. See the License for the specific language governing
  * permissions and limitations under the License
  * >> 
- * 
- * TODO
- * - API: geen foutmelding meer tonen bij niet bestaande klasse of uitvoeren van een set call (void)
- * 
  */
 
 import java.io.BufferedReader;
@@ -80,8 +76,8 @@ public class DebugToolbar implements Serializable {
 	public static final String		BEAN_NAME 				= "dBar";
 	private static final String 	LOG_FILE_CONTENTS 	= "logFileContents";
 	private static final String 	LOG_FILE_SELECTED 	= "logFileSelected";
-	private final int 				MAX_MESSAGES 			= 2000;		//maximum number of message held in this class
-	private static long 			LOG_FILE_SIZE_LIMIT_MB 	= 2;		//log file size limit (in MB)
+	private static final int 		MAX_MESSAGES 			= 2000;		//maximum number of message held in this class
+	private static final long 		LOG_FILE_SIZE_LIMIT_MB 	= 2;		//log file size limit (in MB)
 	
 	private static final String TEMP_VAR_NAME = "dBarTemp";
 	
@@ -139,20 +135,16 @@ public class DebugToolbar implements Serializable {
 	private String logDbPath;			//path to the (OpenLog) database
 	private boolean logEnabled;			//enable/ disable persistent logging
 	private int logLevel;			//level of messages to log
+	private boolean logDbValid;
+	private transient Database dbLog;
 	
 	private static int LEVEL_ERROR = 0;
 	private static int LEVEL_WARN = 1;
 	private static int LEVEL_INFO = 2;
 	private static int LEVEL_DEBUG = 3;
-	
-	private transient Database dbLog;
-	
-	private boolean logDbInvalid;
 		
 	@SuppressWarnings("unchecked")
 	public DebugToolbar() {
-		
-		//System.out.println("dBar: construct");
 		
 		try {
 			activeTab = "";		//default tab: none
@@ -197,8 +189,6 @@ public class DebugToolbar implements Serializable {
 			e.printStackTrace();
 		}
 		
-		//System.out.println("dBar: construct done");
-		
 	}
 	
 	//retrieve an instance of this toolbar class
@@ -233,8 +223,6 @@ public class DebugToolbar implements Serializable {
 	
 	public void init(boolean defaultCollapsed, String color) {
 
-		//System.out.println("dBar: init");
-		
 		toolbarVisible = true;
 		
 		if (!this.configLoaded){
@@ -376,10 +364,28 @@ public class DebugToolbar implements Serializable {
 		this.collapsed = to;
 	}
 	
+	//see above: used to hide/show the toolbar ("remove" link)
 	public boolean isToolbarVisible() {
 		return this.toolbarVisible;
 	}
 	public void setToolbarVisible(boolean to) {
+		this.toolbarVisible = to;
+	}
+	
+	/**
+	 * Check the visibility of the toolbar - this determines wether messages are logged to the toolbar (at all)
+	 *
+	 * @deprecated use {@link isToolbarVisible()} instead  
+	 */	
+	public boolean isEnabled() {
+		return this.toolbarVisible;
+	}
+	/**
+	 * Set the visibility of the toolbar - this determines wether messages are logged to the toolbar (at all)
+	 *
+	 * @deprecated use {@link setToolbarVisible(booelean to)} instead  
+	 */	
+	public void setEnabled(boolean to) {
 		this.toolbarVisible = to;
 	}
 	
@@ -402,7 +408,7 @@ public class DebugToolbar implements Serializable {
 			addMessageToToolbar(message);
 			
 			//log to external database
-			writeLogEntry( message, null, Level.INFO, TYPE_EVENT );
+			createLogDocument( message, false, Level.INFO);
 			
 		}
 
@@ -416,7 +422,7 @@ public class DebugToolbar implements Serializable {
 			addMessageToToolbar(message);
 			
 			//log to external database
-			writeLogEntry(message, throwable, Level.WARNING, TYPE_ERROR );
+			createLogDocument(message, true, Level.WARNING);
 		}
 		
 	}
@@ -429,7 +435,7 @@ public class DebugToolbar implements Serializable {
 	
 			this.messages.add(0, message);
 			
-			if (messages.size() > this.MAX_MESSAGES) {
+			if (messages.size() > DebugToolbar.MAX_MESSAGES) {
 				messages.remove(messages.size() - 1); // remove oldest element
 			}
 			
@@ -448,41 +454,6 @@ public class DebugToolbar implements Serializable {
 		this.log(msg, msgContext, Message.TYPE_INFO);
 	}
 	public void debug(Object msg) {
-		
-Session		session = (Session) resolveVariable("session");
-System.out.println("got a session");
-
-
-try {
-	
-	System.out.println( " user "  + session.getEffectiveUserName() );
-
-	session.recycle();
-	System.out.println("recycled...");
-	
-	System.out.println(session.getEffectiveUserName() );
-	System.out.println("werkt...");
-	
-	System.out.println(session.getNotesVersion());
-	System.out.println("werkt...");
-	
-	System.out.println(session.getPlatform());
-	System.out.println("werkt...");
-	
-	System.out.println(session.getCurrentDatabase());
-	System.out.println("werkt...");
-	
-	System.out.println(session.getUserGroupNameList());
-	System.out.println("werkt...");
-	
-	System.out.println(session.isTrustedSession());
-	System.out.println("werkt...");
-	
-} catch (Exception e) {
-	e.printStackTrace();
-	
-}
-		
 		this.log(msg, null, Message.TYPE_DEBUG);
 	}
 	public void debug(Object msg, String msgContext) {
@@ -1328,7 +1299,7 @@ try {
 	public void setLogDbPath(String to) {
 		
 		try {
-			this.logDbInvalid = false;		//reset
+			this.logDbValid = true;		//reset
 			
 			if (to.equals("current")) {
 				this.logDbPath = getCurrentDatabase().getFilePath();
@@ -1341,7 +1312,7 @@ try {
 	}
 	
 	public boolean getLogDbValid() {
-		return !logDbInvalid;
+		return logDbValid;
 	}
 	
 	public boolean isLogEnabled() {
@@ -1381,9 +1352,6 @@ try {
 
 	}
 
-	public static final String TYPE_ERROR = "Error";
-	public static final String TYPE_EVENT = "Event";
-
 	private static boolean isRecycled( Database db) {
 		
 		boolean isRecycled = true;
@@ -1405,12 +1373,12 @@ try {
 	private Database getLogDb() {
 		try {
 			
-			if (logDbInvalid) {		//db marked as invalid
+			if (!logDbValid) {		//db marked as invalid
 				return null;
 			}
 			
 			if (StringUtil.isEmpty(logDbPath)) {
-				logDbInvalid = true;
+				logDbValid = false;
 				return null;
 			}
 			
@@ -1421,12 +1389,12 @@ try {
 				dbLog = getSessionAsSigner().getDatabase( serverName, logDbPath );
 				
 				if (dbLog == null) {		//still null: mark as invalid
-					logDbInvalid = true;
+					logDbValid = false;
 				}
 				
 				if (!dbLog.isOpen()) {		//database object could not be opened: mark as invalid
 					dbLog = null;
-					logDbInvalid = true;
+					logDbValid = false;
 				}
 				
 			} else {
@@ -1442,7 +1410,7 @@ try {
 	}
 	
 	//create a document in an external log database
-	private void writeLogEntry( Message message, Throwable throwable, Level severity, String eventType) {
+	private void createLogDocument( Message message, boolean isError, Level severity) {
 		
 		if ( !logEnabled ) {
 			return;
@@ -1472,8 +1440,7 @@ try {
 			getLogDb();
 			
 			//abort if log db could not be opened/ not specified
-			if (logDbInvalid) {
-				System.out.println("can't write to external log db: invalid db");
+			if (!logDbValid) {
 				return;
 			}
 			
@@ -1485,7 +1452,7 @@ try {
 			docLog.replaceItemValue("LogEffectiveName", effectiveUserName );
 			docLog.replaceItemValue("LogAccessLevel", getReadableAccessLevel( getCurrentDatabase().getCurrentAccessLevel() ) );
 
-			if (throwable != null) {
+			if (isError) {
 				docLog.replaceItemValue("LogErrorMessage", message.getSummary() );
 				
 				if (message.getErrorId()>0) {
@@ -1502,7 +1469,7 @@ try {
 			setDate( docLog, "LogEventTime", message.getDate() );
 			setDate( docLog, "LogAgentStartTime", message.getDate() );
 			
-			docLog.replaceItemValue("LogEventType", eventType);
+			docLog.replaceItemValue("LogEventType", (isError ? "Error" : "Event" ) );
 			docLog.replaceItemValue("LogMessage", message.getDetails() );
 			docLog.replaceItemValue("LogFromDatabase", currentDbFilePath );
 			docLog.replaceItemValue("LogFromServer", serverName);
@@ -1536,22 +1503,34 @@ try {
 	 *****************************************/
 	
 	private Session getSession() {
-		//TODO: FIX !!!
-		
-		//check if the session is recycled
-		//if ( DebugToolbar.isRecycled(session) ) {
+		if (session == null) {
 			session = (Session) resolveVariable("session");
-		//}
+		} else {
+			try {
+				@SuppressWarnings("unused")
+				boolean tmp = session.isOnServer();
+			} catch (NotesException ne) {
+				try {
+					session = (Session) resolveVariable("session");
+				} catch (Exception e) {	}
+			}
+		}
 		return session;
 	}
 	
 	private Session getSessionAsSigner() {
-		//TODO: FIX !!!
-		
-		//check if the session is recycled
-		//if ( DebugToolbar.isRecycled(session) ) {
+		if (sessionAsSigner == null) {
 			sessionAsSigner = (Session) resolveVariable("sessionAsSigner");
-		//}
+		} else {
+			try {
+				@SuppressWarnings("unused")
+				boolean tmp = sessionAsSigner.isOnServer();
+			} catch (NotesException ne) {
+				try {
+					session = (Session) resolveVariable("sessionAsSigner");
+				} catch (Exception e) {	}
+			}
+		}
 		return sessionAsSigner;
 	}
 	
