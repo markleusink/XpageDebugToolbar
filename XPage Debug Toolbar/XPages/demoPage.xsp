@@ -77,14 +77,23 @@ setDemoScopeVariables();
 			<h3>Logging from SSJS</h3>
 
 			Add a message:&#160;
-			<xp:button value="info" id="btnInfoMsg"
-				dojoType="dijit.form.Button">
+			<xp:button value="debug" id="btnDebugMsg" dojoType="dijit.form.Button">
+				<xp:eventHandler event="onclick" submit="true" refreshMode="full">
+					<xp:this.action><![CDATA[#{javascript:dBar.debug("debug message using SSJS from a button");}]]></xp:this.action>
+				</xp:eventHandler>
+			</xp:button>
+			<xp:button value="info" id="btnInfoMsg" dojoType="dijit.form.Button">
 				<xp:eventHandler event="onclick" submit="true" refreshMode="full">
 					<xp:this.action><![CDATA[#{javascript:dBar.info("info message using SSJS from a button");}]]></xp:this.action>
 				</xp:eventHandler>
 			</xp:button>
-			<xp:button id="btnErrorMsg" dojoType="dijit.form.Button"
-				value="error">
+			<xp:button value="warning" id="btnWarnMsg" dojoType="dijit.form.Button">
+				<xp:eventHandler event="onclick" submit="true" refreshMode="full">
+					<xp:this.action><![CDATA[#{javascript:dBar.warn("warning message using SSJS from a button");}]]></xp:this.action>
+				</xp:eventHandler>
+			</xp:button>
+			
+			<xp:button id="btnErrorMsg" dojoType="dijit.form.Button" value="error">
 				<xp:eventHandler event="onclick" submit="true" refreshMode="full">
 					<xp:this.action><![CDATA[#{javascript:try {
 	
@@ -101,20 +110,7 @@ setDemoScopeVariables();
 	}]]></xp:this.action>
 				</xp:eventHandler>
 			</xp:button>
-			<xp:button value="warning" id="btnWarningMessage"
-				dojoType="dijit.form.Button">
-				<xp:eventHandler event="onclick" submit="true" refreshMode="full">
-					<xp:this.action><![CDATA[#{javascript:dBar.warn("warning message using SSJS from a button");}]]></xp:this.action>
-				</xp:eventHandler>
-			</xp:button>
-	
-			<xp:button value="debug" id="button7"
-				dojoType="dijit.form.Button">
-				<xp:eventHandler event="onclick" submit="true" refreshMode="full">
-					<xp:this.action><![CDATA[#{javascript:dBar.debug("debug message using SSJS from a button");}]]></xp:this.action>
-				</xp:eventHandler>
-			</xp:button>
-	
+			
 			<xp:br></xp:br>
 			<xp:button value="dump an object (sessionScope)" id="button10"
 				dojoType="dijit.form.Button">
