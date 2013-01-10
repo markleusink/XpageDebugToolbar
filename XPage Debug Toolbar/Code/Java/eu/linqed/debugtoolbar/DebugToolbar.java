@@ -120,7 +120,6 @@ public class DebugToolbar implements Serializable {
 	
 	private transient Database dbCurrent;
 	private transient Session session;
-	private transient Session sessionAsSigner;
 	private String currentDbFilePath;
 	private String currentDbTitle;
 	private String serverName;
@@ -1386,7 +1385,7 @@ public class DebugToolbar implements Serializable {
 				
 				System.out.println( ( dbLog == null ? "log db is null" : "log db is recycled") + " : reload");
 				
-				dbLog = getSessionAsSigner().getDatabase( serverName, logDbPath );
+				dbLog = getSession().getDatabase( serverName, logDbPath );
 				
 				if (dbLog == null) {		//still null: mark as invalid
 					logDbValid = false;
@@ -1516,22 +1515,6 @@ public class DebugToolbar implements Serializable {
 			}
 		}
 		return session;
-	}
-	
-	private Session getSessionAsSigner() {
-		if (sessionAsSigner == null) {
-			sessionAsSigner = (Session) resolveVariable("sessionAsSigner");
-		} else {
-			try {
-				@SuppressWarnings("unused")
-				boolean tmp = sessionAsSigner.isOnServer();
-			} catch (NotesException ne) {
-				try {
-					session = (Session) resolveVariable("sessionAsSigner");
-				} catch (Exception e) {	}
-			}
-		}
-		return sessionAsSigner;
 	}
 	
 	private Database getCurrentDatabase() {
