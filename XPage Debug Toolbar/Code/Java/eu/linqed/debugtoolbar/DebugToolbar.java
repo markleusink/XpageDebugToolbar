@@ -77,7 +77,7 @@ public class DebugToolbar implements Serializable {
 	private static final String 	LOG_FILE_CONTENTS 	= "logFileContents";
 	private static final String 	LOG_FILE_SELECTED 	= "logFileSelected";
 	private static final int 		MAX_MESSAGES 			= 2000;		//maximum number of message held in this class
-	private static final long 		LOG_FILE_SIZE_LIMIT_MB 	= 2;		//log file size limit (in MB)
+	private static final long  		LOG_FILE_SIZE_LIMIT_MB 	= 2;		//log file size limit (in MB)
 	
 	private static final String TEMP_VAR_NAME = "dBarTemp";
 	
@@ -233,6 +233,9 @@ public class DebugToolbar implements Serializable {
 
 			this.configLoaded = true;
 		}
+	}
+	public void init(boolean defaultCollapsed) {
+		this.init(defaultCollapsed, null);
 	}
 	
 	public static boolean hideDetails( String entryName) {
