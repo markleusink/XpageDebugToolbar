@@ -203,30 +203,37 @@ var dBarHelper = {
 	renderInspectorContents: function(){
 		
 		try {
-			// Reset exception- and expression info
+			
+			//reset exception- and expression info
 			viewScope.remove( 'exception' );
 			viewScope.remove( 'expressionInfo' );			
 				
-			var expression = dBar.getInspectorExpression();
+			var expression:string = dBar.getInspectorExpression();
 			if( !expression ){ return; }
 			
-			dBar.debug("expression:" + expression);
-				
+			//don't execute expression if parameters need to be set first
+			var pattern = java.util.regex.Pattern.compile("\\((.*?)\\)", java.util.regex.Pattern.DOTALL);
+			var matcher = pattern.matcher( expression );
+			while(matcher.find()) {
+				var match = @Trim(matcher.group(1));
+				if (!@Left(match,1).equals("\"") && !@Right(match,1).equals("\"") ) {
+					//not something in quotes
+					if (match.indexOf(".")>-1 || match.indexOf("int")>-1 || match.indexOf("boolean")>-1 || match.indexOf("long")>-1) {
+						eu.linqed.debugtoolbar.DebugToolbar.addInspectorMessage("Edit parameters and click 'Enter' to execute this expression");
+						view.postScript("dojo.byId(\"" + getClientId("inputExpression") + "\").focus();");
+						return;
+					}
+				}
+			}
+
 			var expressionObj, expressionClass, expressionValue, exceptionString;	
-			
-			var mightBeAClass = expression.indexOf("(")==-1 && expression.indexOf(")")-1;
 			
 			// Test expression as an expression
 			try {
 				// Fix for expression being interpreted as string
 				expressionObj = eval( "var foo;" + expression );
-				
-				//if (expression.indexOf("(")==-1 && expression.indexOf(")")==-1) {
-					expressionValue = expressionObj.toString();
-					expressionClass = expressionObj.getClass();
-					
-					dBar.debug("as string: " + expressionValue);
-				//}
+				expressionValue = expressionObj.toString();
+				expressionClass = expressionObj.getClass();
 
 			} catch (e) {
 				
@@ -240,18 +247,18 @@ var dBarHelper = {
 						
 					} 
 				
-				exceptionString = this.getExceptionString( e );
-				
-				dBar.error("catch 1: " + exceptionString);
-				
-				
-						//- not allowed: parentheses
-						//testcode: getComponent("buttonTestError1").setDisabled(true) -> void method, gaat hier fout want geen class
-						dBar.debug("check 2: eval of " + 'new ' + expression + '()');
-						
-						expressionClass = eval( 'new ' + expression + '()' ).getClass();
-						exceptionString = ''; //Reset in case evaluation is OK
+					exceptionString = this.getExceptionString( e );
 					
+					dBar.error("catch 1: " + exceptionString);
+					
+					
+					//- not allowed: parentheses
+					//testcode: getComponent("buttonTestError1").setDisabled(true) -> void method, gaat hier fout want geen class
+					dBar.debug("check 2: eval of " + 'new ' + expression + '()');
+					
+					expressionClass = eval( 'new ' + expression + '()' ).getClass();
+					exceptionString = ''; //Reset in case evaluation is OK
+						
 				} catch(e){		
 					dBar.debug("catch 2");
 					

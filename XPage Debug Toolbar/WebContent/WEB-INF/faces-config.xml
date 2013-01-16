@@ -7,8 +7,8 @@
     <!-- persistent logs to an external (OpenLog) database -->
     <managed-property>
       <property-name>logDbPath</property-name>
-      <value>debugToolbar\openLog15.nsf</value>
-      <!-- also a valid value: current -->
+      <value>current</value>
+      <!-- can also be the full path to the log database, e.g. logs\openLog.nsf -->
     </managed-property>
     <managed-property>
       <property-name>logEnabled</property-name>

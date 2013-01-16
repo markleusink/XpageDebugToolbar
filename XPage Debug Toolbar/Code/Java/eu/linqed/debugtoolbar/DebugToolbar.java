@@ -153,7 +153,7 @@ public class DebugToolbar implements Serializable {
 			messages = new Vector<Message>(); 
 			filterLogTypes = new Vector<String>();
 			showLists = true;
-			toolbarColor = "#3C3A59";		//default background color
+			toolbarColor = "#231E6D";		//default background color
 			
 			configLoaded = false;
 			
@@ -947,8 +947,6 @@ public class DebugToolbar implements Serializable {
 		viewScope.put(TEMP_VAR_NAME, tempVar);
 		
 	}
-	
-	//inspector functions
 	
 	/*
 	 * read components ids from the view root

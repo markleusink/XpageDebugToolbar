@@ -46,7 +46,7 @@
 				left: 0;
 				text-shadow: none;
 			}
-			div.dBar select, div.dBar input, div.dBar button, div.dBar label {
+			div.dBar select, div.dBar input, div.dBar button, div.dBar label, div.dBar li {
 				font: normal 11px/normal Arial,​Helvetica,​sans-serif;
 			}
 			div.dBar a, div.dBar a:visited { 
@@ -125,6 +125,9 @@
 				font-size: 18px;
 				background: #eeeeee;
 			}
+			div.dBar ul {
+				list-style-type:none;
+			}
 			
 			div.dBar table.errorDetails td {padding: 1px 3px 1px 0; }
 
@@ -159,7 +162,7 @@
 				padding: 15px; 
 				width: 450px; 
 				color: #fff;
-				background: #444096;
+				background: #231E6D;
 				-moz-box-shadow: 3px 3px 5px #000000;
 			    -webkit-box-shadow: 3px 3px 5px #000000;
 			    box-shadow: 3px 3px 5px #000000;
@@ -393,7 +396,7 @@
 					<xp:link escape="true" text="clear messages"
 						id="link20">
 						<xp:eventHandler event="onclick" submit="true"
-							refreshMode="partial" refreshId="toolbarContents" execId="debugToolbar"
+							refreshMode="partial" refreshId="debugToolbar" execId="debugToolbar"
 							execMode="partial" immediate="true">
 							<xp:this.action><![CDATA[#{javascript:dBar.clearMessages();}]]></xp:this.action>
 						</xp:eventHandler>
@@ -978,9 +981,9 @@ r
 								</xp:inputText>
 
 								&#160;
-								<xp:link escape="true" id="link31"
+								<xp:link escape="false" id="link31"
 								rendered="#{javascript:dBar.expressionMultipleComponents}">
-									<xp:this.text><![CDATA[<< step back]]></xp:this.text>
+									<xp:this.text><![CDATA[&laquo; step back]]></xp:this.text>
 									<xp:eventHandler event="onclick" submit="true" refreshMode="partial"
 										refreshId="inspector" disableValidators="true">
 										<xp:this.action><![CDATA[#{javascript:dBar.removeExpressionComponent();}]]></xp:this.action>
@@ -1005,7 +1008,8 @@ r
 					</div>
 					
 					<pre>
-						<xp:messages id="inspectorMessages" title="Press left mouse button to show entire message" />
+						<xp:messages id="inspectorMessages"
+							title="Press left mouse button to show entire message" />
 					</pre>
 					
 					<xp:panel rendered="#{javascript:viewScope.expressionInfo}" id="expressionInfo">
