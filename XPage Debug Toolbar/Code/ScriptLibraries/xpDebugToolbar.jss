@@ -239,37 +239,25 @@ var dBarHelper = {
 				
 				try {	//test as a class, but check first if it has a class 'syntax'
 				
-					dBar.error("catch 1");
-				
 					if (expression.indexOf("(")>-1) {
-						eu.linqed.debugtoolbar.DebugToolbar.addInspectorMessage("Expression executed");
-						//return;
+						eu.linqed.debugtoolbar.DebugToolbar.addInspectorMessage("Expression executed: " + expression);
 						
-					} 
+					} else {
 				
-					exceptionString = this.getExceptionString( e );
-					
-					dBar.error("catch 1: " + exceptionString);
-					
-					
-					//- not allowed: parentheses
-					//testcode: getComponent("buttonTestError1").setDisabled(true) -> void method, gaat hier fout want geen class
-					dBar.debug("check 2: eval of " + 'new ' + expression + '()');
-					
-					expressionClass = eval( 'new ' + expression + '()' ).getClass();
-					exceptionString = ''; //Reset in case evaluation is OK
+						exceptionString = this.getExceptionString( e );
+						expressionClass = eval( 'new ' + expression + '()' ).getClass();
+						exceptionString = ''; //Reset in case evaluation is OK
+					}
 						
 				} catch(e){		
-					dBar.debug("catch 2");
-					
-					exceptionString = "a" + this.getExceptionString( e );
+
+					exceptionString = this.getExceptionString( e );
 					
 					try { // Try expression as Class without constructor
 						expressionClass = java.lang.Class.forName( expression );
 						exceptionString = ''; //Reset in case evaluation is OK
 					} catch (e) {
-						exceptionString = "B " +  this.getExceptionString( e );
-						dBar.error(e)
+						exceptionString = this.getExceptionString( e );
 					}
 				}
 			}
@@ -285,10 +273,7 @@ var dBarHelper = {
 				viewScope.put( 'expressionInfo', "" );		
 				eu.linqed.debugtoolbar.DebugToolbar.addInspectorMessage(exceptionString);
 				
-			} else {
-				
-				dBar.debug("add object to viewScope");
-				
+			} else {				
 				viewScope.put( 'expressionInfo', {
 					className: className,	
 					value: expressionValue
@@ -296,12 +281,9 @@ var dBarHelper = {
 
 			}
 			
-			dBar.debug("done");
-			
 		} catch( e ){
 			viewScope.put( 'expressionInfo', '' );
-			dBar.error(e);
-			
+			dBar.error(e, "inspector");
 		}	
 	},
 	

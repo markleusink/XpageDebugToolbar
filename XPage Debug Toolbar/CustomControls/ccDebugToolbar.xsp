@@ -1286,7 +1286,7 @@ dBar.addInspectorExpressionComponent(c);}]]></xp:this.action>
 
 	<!-- missing required managed bean message -->
 	<xp:div
-		style="position: absolute; z-index: 10000; color: #ffffff; background: #000000; font-size: 11px; width: 100%; top: 0; left:0; padding: 10px;">
+		style="position: absolute; z-index: 10000; color: #ffffff; background: #231E6D; font-size: 11px; width: 100%; top: 0; left:0; padding: 10px;">
 		<xp:this.loaded><![CDATA[${javascript:typeof dBar == "undefined"}]]></xp:this.loaded>
 		
 		<xp:text escape="false" disableTheme="true" id="computedField1">

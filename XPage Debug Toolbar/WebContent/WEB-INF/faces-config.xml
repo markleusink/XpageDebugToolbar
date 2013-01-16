@@ -2,9 +2,10 @@
 <faces-config>
   <managed-bean id="dBar">
     <managed-bean-name>dBar</managed-bean-name>
-    <managed-bean-class>eu.linqed.debugtoolbar.DebugToolbar</managed-bean-class>
+    <managed-bean-class>eu.linqed.debugtoolbar.DebugToolbar
+		</managed-bean-class>
     <managed-bean-scope>session</managed-bean-scope>
-    <!-- persistent logs to an external (OpenLog) database -->
+    <!-- persistent logs to an external (OpenLog)/ current database -->
     <managed-property>
       <property-name>logDbPath</property-name>
       <value>current</value>

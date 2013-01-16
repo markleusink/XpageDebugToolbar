@@ -409,8 +409,8 @@ public class DebugToolbar implements Serializable {
 			
 			addMessageToToolbar(message);
 			
-			//log to external database
-			createLogDocument( message, false, Level.INFO);
+			//store log document
+			createLogDocument( message, type.equals(Message.TYPE_ERROR) , Level.INFO);
 			
 		}
 
@@ -423,7 +423,7 @@ public class DebugToolbar implements Serializable {
 			
 			addMessageToToolbar(message);
 			
-			//log to external database
+			//store log document
 			createLogDocument(message, true, Level.WARNING);
 		}
 		
@@ -1444,7 +1444,6 @@ public class DebugToolbar implements Serializable {
 			docLog.replaceItemValue("LogAgentLanguage", "XPages");
 			docLog.replaceItemValue("LogUserName", userName );
 			docLog.replaceItemValue("LogEffectiveName", effectiveUserName );
-			docLog.replaceItemValue("LogAccessLevel", getReadableAccessLevel( getCurrentDatabase().getCurrentAccessLevel() ) );
 
 			if (isError) {
 				docLog.replaceItemValue("LogErrorMessage", message.getSummary() );
@@ -1477,6 +1476,8 @@ public class DebugToolbar implements Serializable {
 			}
 			
 			docLog.replaceItemValue("LogFromAgent", fromPage);
+			
+			docLog.replaceItemValue("LogAccessLevel", getReadableAccessLevel( getCurrentDatabase().getCurrentAccessLevel() ) );
 			docLog.replaceItemValue("LogUserRoles", userRoles );
 			docLog.replaceItemValue("LogClientVersion", notesVersion );
 
