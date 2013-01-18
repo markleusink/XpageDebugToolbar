@@ -1201,7 +1201,12 @@ dBar.addInspectorExpressionComponent(c);}]]></xp:this.action>
 								<tr>
 								<td><img width="80" height="80" src="http://secure.gravatar.com/avatar/80b0217f17f01b662fe26275fd625584?size=80" title="Hi !" alt="Hi !" /></td>
 								<td>
-									The XPage Debug Toolbar (version 3) is created and maintained by Mark Leusink<br />
+									The XPage Debug Toolbar (version 3) is created and maintained by Mark Leusink. Download the latest release from&#160;<xp:link text="OpenNTF" target="_blank">
+			<xp:this.value><![CDATA[http://www.openntf.org/internal/home.nsf/project.xsp?action=openDocument&name=XPage%20Debug%20Toolbar]]></xp:this.value>
+		</xp:link>&#160;or the source directly from&#160;
+		<xp:link text="GitHub" target="_blank">
+			<xp:this.value><![CDATA[https://github.com/markleusink/XpageDebugToolbar]]></xp:this.value>
+		</xp:link>.<br />
 									<br />
 										<a target="_blank" href="http://linqed.eu">
 											blog
