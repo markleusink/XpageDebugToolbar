@@ -74,8 +74,10 @@ public class DebugToolbar implements Serializable {
 	private static final long serialVersionUID = 6348127836747732428L;
 
 	public static final String		BEAN_NAME 				= "dBar";
-	private static final String 	LOG_FILE_CONTENTS 	= "logFileContents";
-	private static final String 	LOG_FILE_SELECTED 	= "logFileSelected";
+	private static final String 	LOG_FILE_CONTENTS 		= "logFileContents";
+	private static final String 	LOG_FILE_SELECTED 		= "logFileSelected";
+	private static final String		DEFAULT_TOOLBAR_COLOR	= "#231E6D";
+	
 	private static final int 		MAX_MESSAGES 			= 2000;		//maximum number of message held in this class
 	private static final long  		LOG_FILE_SIZE_LIMIT_MB 	= 2;		//log file size limit (in MB)
 	
@@ -153,7 +155,7 @@ public class DebugToolbar implements Serializable {
 			messages = new Vector<Message>(); 
 			filterLogTypes = new Vector<String>();
 			showLists = true;
-			toolbarColor = "#231E6D";		//default background color
+			toolbarColor = DEFAULT_TOOLBAR_COLOR;
 			
 			configLoaded = false;
 			
