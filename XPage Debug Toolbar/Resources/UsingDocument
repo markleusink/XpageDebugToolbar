@@ -1,13 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
-<!DOCTYPE note SYSTEM 'xmlschemas/domino_8_5_3.dtd'>
 <note default='true' class='helpusingdocument' xmlns='http://www.lotus.com/dxl'
- version='8.5' maintenanceversion='3.0' replicaid='C1257AC50045B72F'>
-<noteinfo noteid='20a' unid='8F860BCBCEC1EF95C1257AEA002D0D22' sequence='1'>
+ version='9.0' replicaid='C1257B07004D0102'>
+<noteinfo noteid='182' unid='8F860BCBCEC1EF95C1257AEA002D0D22' sequence='1'>
 <created><datetime>20130105T091204,82+01</datetime></created>
-<modified><datetime>20130105T091204,97+01</datetime></modified>
+<modified><datetime>20130203T150107,08+01</datetime></modified>
 <revised><datetime>20130105T091204,96+01</datetime></revised>
-<lastaccessed><datetime>20130105T091204,96+01</datetime></lastaccessed>
-<addedtofile><datetime>20130105T091204,96+01</datetime></addedtofile></noteinfo>
+<lastaccessed><datetime>20130203T150107,07+01</datetime></lastaccessed>
+<addedtofile><datetime>20130203T150107,07+01</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Mark Leusink/O=LinQed</name></updatedby>
 <wassignedby><name>CN=Mark Leusink/O=LinQed</name></wassignedby>
 <item name='$HTMLCode' sign='true'>

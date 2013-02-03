@@ -1,13 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
-<!DOCTYPE note SYSTEM 'xmlschemas/domino_8_5_3.dtd'>
-<note class='form' xmlns='http://www.lotus.com/dxl' version='8.5' maintenanceversion='3.0'
- replicaid='C1257AC50045B72F'>
-<noteinfo noteid='22a' unid='797092B6AAA4DDC7C1257AF50076BD64' sequence='15'>
+<note class='form' xmlns='http://www.lotus.com/dxl' version='9.0' replicaid='C1257B07004D0102'>
+<noteinfo noteid='18e' unid='797092B6AAA4DDC7C1257AF50076BD64' sequence='15'>
 <created><datetime>20130116T223657,32+01</datetime></created>
-<modified><datetime>20130116T225943,31+01</datetime></modified>
+<modified><datetime>20130203T150107,13+01</datetime></modified>
 <revised><datetime>20130116T225943,29+01</datetime></revised>
-<lastaccessed><datetime>20130116T225943,29+01</datetime></lastaccessed>
-<addedtofile><datetime>20130116T223657,57+01</datetime></addedtofile></noteinfo>
+<lastaccessed><datetime>20130203T150107,12+01</datetime></lastaccessed>
+<addedtofile><datetime>20130203T150107,12+01</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Mark Leusink/O=LinQed</name></updatedby>
 <wassignedby><name>CN=Mark Leusink/O=LinQed</name></wassignedby>
 <item name='$Comment' sign='true'><text/></item>

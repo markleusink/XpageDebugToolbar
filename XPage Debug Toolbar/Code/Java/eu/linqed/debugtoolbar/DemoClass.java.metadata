@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="3.0" replicaid="C1257AC50045B72F" version="8.5" xmlns="http://www.lotus.com/dxl">
-<noteinfo noteid="1b2" sequence="59" unid="4EBBFA4DBAE09C43C1257AD800347A53">
+<?xml version="1.0" encoding="UTF-8"?><note class="form" replicaid="C1257AC50045B72F" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="1b2" sequence="101" unid="4EBBFA4DBAE09C43C1257AD800347A53">
 <created><datetime>20121218T103311,87+01</datetime></created>
-<modified><datetime>20130104T152803,11+01</datetime></modified>
-<revised><datetime>20130104T152219,40+01</datetime></revised>
-<lastaccessed><datetime>20130104T152803,09+01</datetime></lastaccessed>
+<modified><datetime>20130202T155258,84+01</datetime></modified>
+<revised><datetime>20130202T155258,82+01</datetime></revised>
+<lastaccessed><datetime>20130202T155258,82+01</datetime></lastaccessed>
 <addedtofile><datetime>20130104T131529,71+01</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Mark Leusink/O=LinQed</name></updatedby>
+<updatedby><name>CN=Mark Leusink/O=LinQed</name><name>CN=Mark Leusink/O=SAXDEV</name><name>CN=Mark Leusink/O=LinQed</name></updatedby>
 <wassignedby><name>CN=Mark Leusink/O=LinQed</name></wassignedby>
 <item name="$Flags"><text>34567Cg~[</text></item>
 <item name="$TITLE"><text>eu/linqed/debugtoolbar/DemoClass.java</text></item>

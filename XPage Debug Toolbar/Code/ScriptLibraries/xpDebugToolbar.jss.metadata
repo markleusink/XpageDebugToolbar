@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?><note class="filter" maintenanceversion="3.0" replicaid="C1257AC50045B72F" version="8.5" xmlns="http://www.lotus.com/dxl">
-<noteinfo noteid="1be" sequence="704" unid="3C8DA852A1282A5DC1257984003486CB">
+<?xml version="1.0" encoding="UTF-8"?><note class="filter" replicaid="C1257AC50045B72F" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="1be" sequence="734" unid="3C8DA852A1282A5DC1257984003486CB">
 <created><datetime>20120113T103343,79+01</datetime></created>
-<modified><datetime>20130104T131529,76+01</datetime></modified>
-<revised><datetime>20130103T231356,78+01</datetime></revised>
-<lastaccessed><datetime>20130104T131529,75+01</datetime></lastaccessed>
+<modified><datetime>20130116T230824,16+01</datetime></modified>
+<revised><datetime>20130116T230824,14+01</datetime></revised>
+<lastaccessed><datetime>20130116T230824,14+01</datetime></lastaccessed>
 <addedtofile><datetime>20130104T131529,75+01</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Mark Leusink/O=LinQed</name><name>CN=Mark Leusink/O=CITC</name><name>CN=Daan Maliepaard/O=CITC</name><name>CN=Mark Leusink/O=CITC</name><name>CN=Daan Maliepaard/O=CITC</name><name>CN=Mark Leusink/O=CITC</name><name>CN=Daan Maliepaard/O=CITC</name><name>CN=Mark Leusink/O=CITC</name><name>CN=Mark Leusink/O=LinQed</name><name>CN=Mark Leusink/O=CITC</name><name>CN=Mark Leusink/O=LinQed</name><name>CN=Mark Leusink/O=CITC</name><name>CN=Mark Leusink/O=LinQed</name><name>CN=Mark Leusink/O=CITC</name><name>CN=Domino Administrator/O=LinQed</name><name>CN=Mark Leusink/O=CITC</name><name>CN=Mark Leusink/O=LinQed</name><name>CN=Mark Leusink/O=CITC</name><name>CN=Mark Leusink/O=LinQed</name><name>CN=Mark Leusink/O=CITC</name><name>CN=Mark Leusink/O=LinQed</name><name>CN=Mark Leusink/O=CITC</name><name>CN=Mark Leusink/O=LinQed</name><name>CN=Mark Leusink/O=CITC</name><name>CN=Mark Leusink/O=LinQed</name><name>CN=Mark Leusink/O=CITC</name><name>CN=Mark Leusink/O=LinQed</name><name>CN=Mark Leusink/O=CITC</name><name>CN=Mark Leusink/O=LinQed</name><name>CN=Domino Administrator/O=LinQed</name><name>CN=Mark Leusink/O=LinQed</name></updatedby>
 <wassignedby><name>CN=Mark Leusink/O=LinQed</name></wassignedby>

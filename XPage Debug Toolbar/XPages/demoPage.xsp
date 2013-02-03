@@ -262,7 +262,13 @@ doc = vw.getDocumentByKey("User Help");}]]></xp:this.action>
 
 	<xp:div id="pnlDocumentation" style="margin: 10px;">
 		<h2>How to install and use the XPage Debug Toolbar</h2>
-		
+
+		Download the latest release from the&#160;
+		<xp:link text="project site" target="_blank">
+			<xp:this.value><![CDATA[http://www.openntf.org/internal/home.nsf/project.xsp?action=openDocument&name=XPage%20Debug%20Toolbar]]></xp:this.value>
+		</xp:link>
+		&#160;at OpenNTF (note: the&#160;latest release isn't available yet in the OpenNTF import Designer extension, but will be soon...).
+
 		<p>
 		1. Copy the following design elements to your application:
 		<ul>
@@ -374,7 +380,7 @@ The configuration options for the persistent logging feature are:<br />
 			warn (warning and error messages)<br/>
 			error (errors only)<br/>
 		</td></tr>
-		<tr><td><b>logDbPath</b></td><td>Path to the database were the log messages will be stored. "curent" is also a valid
+		<tr><td><b>logDbPath</b></td><td>Path to the database were the log messages will be stored. "current" is also a valid
 		value to store the messages in the current database. Examples:<br />
 		<br />logs\openLog.nsf</td></tr>
 		 
@@ -532,5 +538,20 @@ The configuration options for the persistent logging feature are:<br />
 			</ul>
 		</p>
 	</xp:div>
+	
+	<!-- google analytics tracking -->
+	<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31456612-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 
 </xp:view>
