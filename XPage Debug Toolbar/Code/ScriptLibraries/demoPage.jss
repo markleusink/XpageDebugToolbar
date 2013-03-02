@@ -8,8 +8,6 @@ function setDemoScopeVariables() {
 	try {
 		
 		dBar.info("Adding demo values to the various scopes...", "setDemoScopeVariables");
-		
-		dBar.startTimer("adding scope messages");
 
 		viewScope.put("foo", "bar");
 		viewScope.put("arrayObject", [
@@ -52,10 +50,8 @@ function setDemoScopeVariables() {
 		}
 		viewScope.put("largeArray", largeArray);
 		
-		//wait 400 ms for the timer
-		java.lang.Thread.currentThread().sleep(400);		
-		
-		dBar.stopTimer("adding scope messages");
+		sessionScope.put(1, "using a number as a scope key: 1");		//did you know you can do this?
+		sessionScope.put(500, "using a number as a scope key: 500");
 		
 		dBar.info("Done adding", "setDemoScopeVariables");
 		

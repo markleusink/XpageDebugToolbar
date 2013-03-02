@@ -19,14 +19,14 @@ var dBarHelper = {
 	MAX_DATASET_SAMPLE : 50,		//maximum number of samples from a list that are shown by default
 	
 	//returns the dumped contents of an entry the current selected scope
-	getScopeEntry : function( entryName:String ) {
+	getScopeEntry : function( entryName ) {
 	
 		if (entryName==null || entryName.length==0) {
 			return "invalid input";
 		}
 		
 		//don't render variables related to the debug toolbar
-		if (dBar.hideDetails(entryName)) {
+		if (dBar.hideDetails( entryName.toString() )) {
 			return 	"(skipped - debugToolbar variable)";
 		}
 		
@@ -42,6 +42,7 @@ var dBarHelper = {
 				result = requestScope.get(entryName);break;
 			case "viewScope":
 				result = viewScope.get(entryName);break;
+				
 		
 		}
 		

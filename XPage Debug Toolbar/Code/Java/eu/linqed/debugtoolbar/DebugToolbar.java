@@ -35,9 +35,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.Vector;
 import java.util.Map.Entry;
 
@@ -103,7 +100,7 @@ public class DebugToolbar implements Serializable {
 	
 	private boolean configLoaded;
 	
-	private SortedSet<String> sortedScopeContents;
+	private List<Object> sortedScopeKeys;
 	
 	private long logFileModifiedRead;
 	private ArrayList<String> logFileHistory;
@@ -269,7 +266,7 @@ public class DebugToolbar implements Serializable {
 			this.activeTab = tabName;
 			
 			if (tabName.indexOf("Scope")>-1) {
-				readScopeContents();
+				readScopeKeys();
 			}
 			
 		}
@@ -285,18 +282,34 @@ public class DebugToolbar implements Serializable {
 	
 	
 	public boolean scopeHasValues() {
-		return this.getScopeContents().size()>0;
+		return (this.getScopeKeys() == null ? false : this.getScopeKeys().size()>0 );
+	}
+	
+	public List<Object> getScopeKeys() {
+		return sortedScopeKeys;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set getScopeContents() {
-		return sortedScopeContents;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void readScopeContents() {
+	public void readScopeKeys() {
+		
 		Map map = (Map) resolveVariable(activeTab);
-		sortedScopeContents = new TreeSet<String>(map.keySet());
+	
+		sortedScopeKeys = new ArrayList<Object>(map.keySet());
+		
+		Collections.sort(sortedScopeKeys, 
+				
+			new Comparator<Object>() {
+			
+				//sort ascending
+				public int compare(Object key1, Object key2) {
+					String k1 = key1.toString();
+					String k2 = key2.toString();
+					return k1.compareTo(k2);
+				}
+				
+			}
+		);	
+		
 	}
 	
 	public void clearScopeContents(String type) {
@@ -357,7 +370,7 @@ public class DebugToolbar implements Serializable {
 			Map map = (Map) resolveVariable(activeTab);
 			map.remove(name);
 		
-			readScopeContents();
+			readScopeKeys();
 		}
 	}
 	

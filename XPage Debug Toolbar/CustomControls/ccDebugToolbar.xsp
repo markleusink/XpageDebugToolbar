@@ -74,11 +74,9 @@
 
 			} div.dBar ul.links a { color: #ffffff; font-weight: bold; border-left: 1px solid transparent; border-right: 1px
 			solid transparent; display: block; padding: 0 5px; position:
-			relative; } div.dBar ul.links a:hover,
-			div.dBar ul.links a.selected { background: #B7B7B7;
-			text-decoration: none; }
-
-			div.dBar .contentWrapper { background: #B7B7B7;	color: #000000; padding: 3px; }
+			relative; }
+			div.dBar ul.links a:hover, div.dBar ul.links a.selected { background: #9B9B9B; text-decoration: none; }
+			div.dBar .contentWrapper { background: #9B9B9B; color: #000000; padding: 3px; }
 			div.dBar .contentWrapper td { padding: 2px 2px 2px 0; }
 			div.dBar .content { margin: 0; padding: 5px 9px 9px 9px; background: #ffffff; }
 
@@ -534,8 +532,8 @@
 					<xp:link escape="true" id="link18" text="refresh">
 						<xp:eventHandler event="onclick" submit="true"
 							refreshMode="partial" refreshId="debugToolbar" immediate="true"
-							execMode="partial">
-							<xp:this.action><![CDATA[#{javascript:dBar.readScopeContents();}]]></xp:this.action>
+							execMode="partial" execId="debugToolbar">
+							<xp:this.action><![CDATA[#{javascript:dBar.readScopeKeys();}]]></xp:this.action>
 						</xp:eventHandler>
 					</xp:link>
 
@@ -548,7 +546,7 @@
 							<xp:this.text><![CDATA[#{javascript:"clear " + dBar.getActiveTab() }]]></xp:this.text>
 							<xp:eventHandler event="onclick"
 								submit="true" refreshMode="partial" refreshId="debugToolbar"
-								immediate="true" execMode="partial">
+								immediate="true" execMode="partial" execId="debugToolbar">
 								<xp:this.action><![CDATA[#{javascript:dBar.clearScopeContents( dBar.getActiveTab());}]]></xp:this.action>
 							</xp:eventHandler>
 						</xp:link>
@@ -590,7 +588,7 @@
 
 					<xp:repeat id="repeatScope" rows="10000"
 						var="scopeEntry" style="margin-top: 5px;"
-						value="#{javascript:dBar.getScopeContents()}">
+						value="#{dBar.scopeKeys}">
 						<xp:this.rendered><![CDATA[#{javascript:dBar.scopeHasValues()}]]></xp:this.rendered>
 
 						<xp:this.facets>
@@ -616,7 +614,7 @@
 										<xp:this.text><![CDATA[#{javascript:( @ClientType().equals("Notes") ? "i" : "");}]]></xp:this.text>
 										<xp:eventHandler event="onclick"
 											submit="true" refreshMode="partial" refreshId="debugToolbar"
-											execMode="partial" immediate="true">
+											execMode="partial" execId="debugToolbar" immediate="true">
 											<xp:this.action><![CDATA[#{javascript:dBar.setInspectorExpression( dBar.getActiveTab() + ".get(\"" + scopeEntry + "\")");
 											dBar.setActiveTab("inspector");
 										}]]></xp:this.action>
@@ -649,7 +647,7 @@
 								</div>
 
 								<xp:text escape="true"
-									disableTheme="true" value="#{javascript:scopeEntry}">
+									disableTheme="true" value="#{scopeEntry}">
 								</xp:text>
 
 							</td>

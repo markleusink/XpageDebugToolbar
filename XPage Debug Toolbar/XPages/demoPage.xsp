@@ -72,7 +72,8 @@ typeof dBar != "undefined";}]]></xp:this.loaded>
 		<h2>XPage Debug Toolbar demo page</h2>
 		
 		<xp:button value="Add sample data to scope variables" id="btnAddSampleData" dojoType="dijit.form.Button">
-			<xp:eventHandler event="onclick" submit="true" refreshMode="full">
+			<xp:eventHandler event="onclick" submit="true"
+				refreshMode="full">
 				<xp:this.action><![CDATA[#{javascript://add some variables to the various scopes to check
 //if they are shown in the debug toolbar
 setDemoScopeVariables();
