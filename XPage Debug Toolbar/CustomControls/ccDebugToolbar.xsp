@@ -430,8 +430,7 @@
 					</xp:link>
 
 					<!-- show all messages -->
-					<xp:repeat id="dtMessages" rows="10000"
-						indexVar="messageIndex" var="message" value="#{dBar.messages}">
+					<xp:repeat id="dtMessages" rows="10000" var="dMessage" value="#{dBar.messages}">
 
 						<xp:this.facets>
 							<xp:text xp:key="header" disableTheme="true"
@@ -445,22 +444,22 @@
 						</xp:this.facets>
 
 						<xp:tr styleClass="divider">
-							<xp:this.rendered><![CDATA[#{javascript:message.type == "divider"}]]></xp:this.rendered>
+							<xp:this.rendered><![CDATA[#{javascript:dMessage.type == "divider"}]]></xp:this.rendered>
 							<xp:td colspan="2">&#160;</xp:td>
 						</xp:tr>
 
 						<xp:tr>
-							<xp:this.rendered><![CDATA[#{javascript:message.type != "divider"}]]></xp:this.rendered>
+							<xp:this.rendered><![CDATA[#{javascript:dMessage.type != "divider"}]]></xp:this.rendered>
 							<xp:td styleClass="time">
 
-								<xp:text escape="false"	disableTheme="true" value="#{message.date}" rendered="#{!dBar.detailedTimings}">
+								<xp:text escape="false"	disableTheme="true" value="#{dMessage.date}" rendered="#{!dBar.detailedTimings}">
 									<xp:this.converter>
 										<xp:convertDateTime type="time" pattern="HH:mm:ss">
 										</xp:convertDateTime>
 									</xp:this.converter>
 								</xp:text>
 								
-								<xp:text escape="false" disableTheme="true" value="#{message.date}" rendered="#{dBar.detailedTimings}">
+								<xp:text escape="false" disableTheme="true" value="#{dMessage.date}" rendered="#{dBar.detailedTimings}">
 									<xp:this.converter>
 										<xp:convertDateTime type="time" pattern="HH:mm:ss:SSS">
 										</xp:convertDateTime>
@@ -471,36 +470,36 @@
 
 							<xp:td>
 								<xp:text escape="false"
-									disableTheme="true" styleClass="#{message.styleclass}">
-									<xp:this.value><![CDATA[#{javascript:(message.context != null ? "(" + message.context + ") " : "")}]]></xp:this.value>
+									disableTheme="true" styleClass="#{dMessage.styleclass}">
+									<xp:this.value><![CDATA[#{javascript:(dMessage.context != null ? "(" + dMessage.context + ") " : "")}]]></xp:this.value>
 								</xp:text>
 								<xp:text escape="false"
-									disableTheme="true" styleClass="#{message.styleclass}"
-									value="#{message.text}">
+									disableTheme="true" styleClass="#{dMessage.styleclass}"
+									value="#{dMessage.text}">
 								</xp:text>
 
 								<!-- stacktrace for errors -->
-								<xp:div	rendered="#{javascript:message.hasStackTrace()}" id="stackTrace">
+								<xp:div	rendered="#{javascript:dMessage.hasStackTrace()}" id="stackTrace">
 
 									<xp:link escape="true" text="show stacktrace" id="link27"
-										rendered="#{!message.showStackTrace}">
+										rendered="#{!dMessage.showStackTrace}">
 										<xp:eventHandler event="onclick"
 											submit="true" refreshMode="partial" refreshId="stackTrace"
 											execMode="partial" execId="debugToolbar" immediate="true">
-											<xp:this.action><![CDATA[#{javascript:message.setShowStackTrace(true);}]]></xp:this.action>
+											<xp:this.action><![CDATA[#{javascript:dMessage.setShowStackTrace(true);}]]></xp:this.action>
 										</xp:eventHandler>
 									</xp:link>
 									<xp:link escape="true" text="hide stacktrace" id="link29"
-										rendered="#{message.showStackTrace}">
+										rendered="#{dMessage.showStackTrace}">
 										<xp:eventHandler event="onclick"
 											submit="true" refreshMode="partial" refreshId="stackTrace"
 											 execId="debugToolbar" execMode="partial" immediate="true">
-											<xp:this.action><![CDATA[#{javascript:message.setShowStackTrace(false);}]]></xp:this.action>
+											<xp:this.action><![CDATA[#{javascript:dMessage.setShowStackTrace(false);}]]></xp:this.action>
 										</xp:eventHandler>
 									</xp:link>
 									<br />
 									<xp:text escape="false" disableTheme="true"
-										rendered="#{message.showStackTrace}" styleClass="#{message.styleclass}" value="#{message.stackTrace}">
+										rendered="#{dMessage.showStackTrace}" styleClass="#{dMessage.styleclass}" value="#{dMessage.stackTrace}">
 										<xp:this.converter>
 											<xp:customConverter>
 												<xp:this.getAsObject><![CDATA[#{javascript:return value}]]></xp:this.getAsObject>
