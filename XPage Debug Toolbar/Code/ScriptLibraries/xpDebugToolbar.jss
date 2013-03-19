@@ -241,7 +241,7 @@ var dBarHelper = {
 				try {	//test as a class, but check first if it has a class 'syntax'
 				
 					if (expression.indexOf("(")>-1) {
-						eu.linqed.debugtoolbar.DebugToolbar.addInspectorMessage("Expression executed: " + expression);
+						eu.linqed.debugtoolbar.DebugToolbar.addInspectorMessage("Expression executed" + (expressionObj == null ? " (null returned)" : "") + ": " + expression);
 						
 					} else {
 				
