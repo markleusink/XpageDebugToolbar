@@ -676,7 +676,7 @@
 								<xp:eventHandler event="onchange" submit="true" refreshMode="partial"
 									refreshId="logFiles" disableValidators="true" execId="debugToolbar"	execMode="partial">
 								<xp:this.action><![CDATA[#{javascript:dBar.showFileContents()}]]></xp:this.action>
-								<xp:this.onStart><![CDATA[dojo.html.set(dojo.byId("#{id:logFileContents}"), "Loading...");]]></xp:this.onStart>
+								<xp:this.onStart><![CDATA[dojo.place("<span>Loading...</span>", "#{id:logFileContents}", "only");]]></xp:this.onStart>
 						</xp:eventHandler></xp:comboBox>&#160;
 						<xp:link escape="true" text="refresh list" id="link37">
 							<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="logFiles" immediate="true" execMode="partial" execId="logFiles">
