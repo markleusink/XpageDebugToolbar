@@ -205,6 +205,10 @@ public class Message implements Serializable {
 	public int getErrorId() {
 		return errorId;
 	}
+	
+	public boolean isError() {
+		return this.type.equals( TYPE_ERROR);
+	}
 
 	public String getType() {
 		return type;

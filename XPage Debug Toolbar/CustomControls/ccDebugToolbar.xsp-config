@@ -14,7 +14,7 @@
         <render-markup>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xd;
 &lt;xp:view xmlns:xp="http://www.ibm.com/xsp/core"&#xd;
   xmlns:xc="http://www.ibm.com/xsp/custom"&gt;&#xd;
-&lt;xp:div style="background-color:#231E6D; padding:3px; color:#ffffff;"&gt;&lt;b&gt;XPage Debug Toolbar&lt;/b&gt; (by Mark Leusink)&lt;/xp:div&gt;&#xd;
+&lt;xp:div style="background-color:#38375B; padding:3px; color:#ffffff;"&gt;&lt;b&gt;XPage Debug Toolbar&lt;/b&gt; (by Mark Leusink)&lt;/xp:div&gt;&#xd;
 &lt;/xp:view&gt;&#xd;
 </render-markup>
         <category>Debug tools</category>

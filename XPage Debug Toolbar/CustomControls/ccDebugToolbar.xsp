@@ -30,7 +30,7 @@
 	dBarHelper.renderInspectorContents();
 }}]]></xp:this.beforeRenderResponse>
 	
-	<xp:panel rendered="#{dBar.toolbarVisible}">
+	<xp:panel rendered="#{dBar.toolbarVisible}" style="visibility:visible;">
 		<xp:this.loaded><![CDATA[${javascript:typeof dBar != "undefined"}]]></xp:this.loaded>
 		
 		<a name="dBar" />
@@ -160,7 +160,7 @@
 				padding: 15px; 
 				width: 450px; 
 				color: #fff;
-				background: #231E6D;
+				background: #38375B;
 				-moz-box-shadow: 3px 3px 5px #000000;
 			    -webkit-box-shadow: 3px 3px 5px #000000;
 			    box-shadow: 3px 3px 5px #000000;
@@ -207,12 +207,12 @@
 
 					<!-- expand link -->
 					<li>
-						<xp:link escape="false" id="link8"
-							style="font-weight: normal" title="expand the debug toolbar">
-							<xp:this.text><![CDATA[#{javascript:(compositeData.collapseTo == "right" ? "<<" : ">>")}]]></xp:this.text>
-							<xp:eventHandler event="onclick"
-								submit="true" refreshMode="partial" refreshId="debugToolbar"
-								immediate="true" execMode="partial" execId="debugToolbar">
+						<xp:link escape="false" id="link8" style="font-weight: normal;" title="expand the debug toolbar">
+							<xp:this.text><![CDATA[#{javascript:var messageText = "(" + dBar.getNumErrors() + "/" + dBar.getNumMessages() + ")";
+
+(compositeData.collapseTo == "right" ? "<< " + messageText : messageText + " >>")}]]></xp:this.text>
+							<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="debugToolbar" immediate="true"
+								execMode="partial" execId="debugToolbar">
 								<xp:this.action><![CDATA[#{javascript:dBar.setCollapsed(false)}]]></xp:this.action>
 							</xp:eventHandler>
 						</xp:link>
@@ -279,10 +279,11 @@
 					<li>
 						<xp:link escape="false" id="linkTabMessages">
 							<xp:this.styleClass><![CDATA[#{javascript:("messages".equals( dBar.getActiveTab() ) ? "selected" : "")}]]></xp:this.styleClass>
-							<xp:this.text><![CDATA[#{javascript:"messages (" + dBar.getMessages().size() + ")"}]]></xp:this.text>
-							<xp:eventHandler event="onclick"
-								submit="true" refreshMode="partial" refreshId="debugToolbar"
-								execMode="partial" execId="debugToolbar" immediate="true">
+							<xp:this.text><![CDATA[#{javascript:"messages " + 
+							"(" + dBar.getNumErrors() + "/" + dBar.getNumMessages() + ")";
+}]]></xp:this.text>
+							<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="debugToolbar" execMode="partial"
+								execId="debugToolbar" immediate="true">
 								<xp:this.action><![CDATA[#{javascript:dBar.setActiveTab("messages");}]]></xp:this.action>
 							</xp:eventHandler>
 						</xp:link>
@@ -752,47 +753,88 @@ r
 					
 					<div style="float:left; margin-right: 15px;">
 						<div style="font-weight:bold; margin-bottom: 3px">Environment</div>
-
-						<xp:repeat id="repeat2" rows="1000" var="customEntry" style="margin-bottom: 10px;">
-							<xp:this.value><![CDATA[#{javascript:dBar.getCustomVars()}]]></xp:this.value>
-	
-							<xp:this.facets>
-								<xp:text xp:key="header" escape="false" disableTheme="true">
-									<xp:this.value><![CDATA[<table class="grid"><tbody>]]></xp:this.value>
-								</xp:text>
-								<xp:text xp:key="footer" escape="false"	disableTheme="true">
-									<xp:this.value><![CDATA[</tbody></table>]]></xp:this.value>
-								</xp:text>
-							</xp:this.facets>
-	
-							<!-- section titles -->
+						
+						<table class="grid"><tbody>
+						
+							<tr><th colspan="2">USER</th></tr>
+							<xp:repeat id="repeat3" rows="1000" var="customEntry" style="margin-bottom: 10px;">
+								<xp:this.value><![CDATA[#{javascript:dBar.getCustomVars('user')}]]></xp:this.value>
+								<tr>
+									<td class="label">
+										<xp:text escape="true" disableTheme="true" value="#{javascript:customEntry.key}"></xp:text>
+									</td>
+									<td>
+										<xp:text escape="false" disableTheme="true" value="#{javascript:customEntry.value}"></xp:text>
+									</td>
+								</tr>
+							</xp:repeat>
+						
+							<tr><th colspan="2">BROWSER</th></tr>
+							<xp:repeat id="repeat4" rows="1000" var="customEntry" style="margin-bottom: 10px;">
+								<xp:this.value><![CDATA[#{javascript:dBar.getCustomVars('browser')}]]></xp:this.value>
+								<tr>
+									<td class="label">
+										<xp:text escape="true" disableTheme="true" value="#{javascript:customEntry.key}"></xp:text>
+									</td>
+									<td>
+										<xp:text escape="false" disableTheme="true" value="#{javascript:customEntry.value}"></xp:text>
+									</td>
+								</tr>
+							</xp:repeat>
+						
+							<tr><th colspan="2">SERVER</th></tr>
+							<xp:repeat id="repeat6" rows="1000" var="customEntry" style="margin-bottom: 10px;">
+								<xp:this.value><![CDATA[#{javascript:dBar.getCustomVars('server')}]]></xp:this.value>
+								<tr>
+									<td class="label">
+										<xp:text escape="true" disableTheme="true" value="#{javascript:customEntry.key}"></xp:text>
+									</td>
+									<td>
+										<xp:text escape="false" disableTheme="true" value="#{javascript:customEntry.value}"></xp:text>
+									</td>
+								</tr>
+							</xp:repeat>
+						
+							<tr><th colspan="2">DATABASE</th></tr>
+							<xp:repeat id="repeat5" rows="1000" var="customEntry" style="margin-bottom: 10px;">
+								<xp:this.value><![CDATA[#{javascript:dBar.getCustomVars('database')}]]></xp:this.value>
+								<tr>
+									<td class="label">
+										<xp:text escape="true" disableTheme="true" value="#{javascript:customEntry.key}"></xp:text>
+									</td>
+									<td>
+										<xp:text escape="false" disableTheme="true" value="#{javascript:customEntry.value}"></xp:text>
+									</td>
+								</tr>
+							</xp:repeat>
+							
 							<xp:tr>
-								<xp:this.rendered><![CDATA[#{javascript:customEntry.key.equals("title")}]]></xp:this.rendered>
-	
-								<th colspan="2">
-									<xp:text escape="true"
-										disableTheme="true" value="#{javascript:customEntry.value}">
-									</xp:text>
-								</th>
-							</xp:tr>
-	
-							<!-- values -->
-							<xp:tr>
-								<xp:this.rendered><![CDATA[#{javascript:!customEntry.key.equals("title")}]]></xp:this.rendered>
-	
-								<td class="label">
-									<xp:text escape="true"
-										disableTheme="true" value="#{javascript:customEntry.key}">
-									</xp:text>
-								</td>
-	
+								<td class="label">Tools</td>
 								<td>
-									<xp:text escape="false"
-										disableTheme="true" value="#{javascript:customEntry.value}">
-									</xp:text>
+									<xp:link escape="true" text="Show all design note signers" id="link38" >
+										<xp:eventHandler event="onclick" submit="true"
+											refreshMode="partial" refreshId="debugToolbar" execMode="partial" execId="debugToolbar">
+											<xp:this.action><![CDATA[#{javascript:dBar.dumpNoteSigners();}]]></xp:this.action>
+										</xp:eventHandler></xp:link>
+										&#160;(in messages tab)
 								</td>
 							</xp:tr>
-						</xp:repeat>
+						
+							<tr><th colspan="2">REQUEST</th></tr>
+								
+							<xp:repeat id="repeat7" rows="1000" var="customEntry" style="margin-bottom: 10px;">
+								<xp:this.value><![CDATA[#{javascript:dBar.getCustomVars('request')}]]></xp:this.value>
+								<tr>
+									<td class="label">
+										<xp:text escape="true" disableTheme="true" value="#{javascript:customEntry.key}"></xp:text>
+									</td>
+									<td>
+										<xp:text escape="false" disableTheme="true" value="#{javascript:customEntry.value}"></xp:text>
+									</td>
+								</tr>
+							</xp:repeat>
+						
+						</tbody></table>
 						
 					</div>
 					
@@ -1245,25 +1287,6 @@ dBar.addInspectorExpressionComponent(c);}]]></xp:this.action>
 			<xp:div styleClass="hideContent bg">
 				<xp:this.rendered><![CDATA[#{javascript:dBar.getActiveTab().length>0 && !dBar.isCollapsed()}]]></xp:this.rendered>
 				
-				<div style="float:right">
-					<ul class="links">
-
-						<!-- about -->
-						<li>
-							<xp:link escape="false" id="link19"
-								style="font-weight: normal" text="developed by Mark Leusink">
-								<xp:this.styleClass><![CDATA[#{javascript:(dBar.getActiveTab().equals("about") ? "selected" : "")}]]></xp:this.styleClass>
-
-								<xp:eventHandler event="onclick"
-									submit="true" refreshMode="partial" refreshId="debugToolbar"
-									immediate="true" execMode="partial" execId="debugToolbar">
-									<xp:this.action><![CDATA[#{javascript:dBar.setActiveTab("about");}]]></xp:this.action>
-								</xp:eventHandler>
-							</xp:link>
-						</li>
-					</ul>
-				</div>
-				
 				<!-- close / top links -->
 				<ul class="links">
 				
@@ -1288,7 +1311,7 @@ dBar.addInspectorExpressionComponent(c);}]]></xp:this.action>
 
 	<!-- missing required managed bean message -->
 	<xp:div
-		style="position: absolute; z-index: 10000; color: #ffffff; background: #231E6D; font-size: 11px; width: 100%; top: 0; left:0; padding: 10px;">
+		style="position: absolute; z-index: 10000; color: #ffffff; background: #38375B; font-size: 11px; width: 100%; top: 0; left:0; padding: 10px;">
 		<xp:this.loaded><![CDATA[${javascript:typeof dBar == "undefined"}]]></xp:this.loaded>
 		
 		<xp:text escape="false" disableTheme="true" id="computedField1">

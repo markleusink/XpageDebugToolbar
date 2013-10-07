@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 import java.util.Map.Entry;
 
@@ -48,8 +49,10 @@ import javax.faces.model.SelectItemGroup;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import lotus.domino.ACL;
 import lotus.domino.Database;
 import lotus.domino.Name;
+import lotus.domino.NoteCollection;
 import lotus.domino.Session;
 
 import java.lang.reflect.Field;
@@ -73,7 +76,7 @@ public class DebugToolbar implements Serializable {
 	public static final String		BEAN_NAME 				= "dBar";
 	private static final String 	LOG_FILE_CONTENTS 		= "logFileContents";
 	private static final String 	LOG_FILE_SELECTED 		= "logFileSelected";
-	private static final String		DEFAULT_TOOLBAR_COLOR	= "#231E6D";
+	private static final String		DEFAULT_TOOLBAR_COLOR	= "#38375B";
 	
 	private static final int 		MAX_MESSAGES 			= 2000;		//maximum number of message held in this class
 	private static final long  		LOG_FILE_SIZE_LIMIT_MB 	= 2;		//log file size limit (in MB)
@@ -85,6 +88,7 @@ public class DebugToolbar implements Serializable {
 	
 	private Vector<Message> messages;
 	private boolean isDetailedTimings;
+	private int numErrors;
 	 
 	private boolean collapsed;
 	private Vector<String> filterLogTypes;
@@ -123,6 +127,8 @@ public class DebugToolbar implements Serializable {
 	private String currentDbTitle;
 	private String serverName;
 	
+	private int accessLevel;
+	
 	private Vector<String> userRoles;
 	private String notesVersion;
 	private String extLibVersion;
@@ -140,6 +146,8 @@ public class DebugToolbar implements Serializable {
 	private static int LEVEL_WARN = 1;
 	private static int LEVEL_INFO = 2;
 	private static int LEVEL_DEBUG = 3;
+	
+	
 		
 	@SuppressWarnings("unchecked")
 	public DebugToolbar() {
@@ -173,6 +181,8 @@ public class DebugToolbar implements Serializable {
 			currentDbTitle = dbCurrent.getTitle();
 			serverName = dbCurrent.getServer();
 			dbCurrent.recycle();
+			
+			accessLevel = dbCurrent.getCurrentAccessLevel();
 			
 			XSPContext context = XSPContext.getXSPContext(FacesContext.getCurrentInstance());
 			
@@ -215,6 +225,59 @@ public class DebugToolbar implements Serializable {
 		
 	}
 	
+	//dump a list of all signers to the messages tab
+	public void dumpNoteSigners() {
+		
+		NoteCollection nc = null;
+		TreeMap<String, String> signers = new TreeMap<String, String>();
+		
+		try {
+			
+			Database dbCurrent = this.getCurrentDatabase();
+			nc = dbCurrent.createNoteCollection(false);
+			nc.selectAllDesignElements(true);
+			nc.buildCollection();
+			
+			this.debug("started retrieving all signers for " + nc.getCount() + " design elements");
+			  
+			String nid = nc.getFirstNoteID();
+			while (nid != null && nid.length()>0) {
+				
+				if ( StringUtil.isNotEmpty(nid)  ) {
+					
+					  Document note = dbCurrent.getDocumentByID(nid);
+					  
+					  if (note != null) {
+		
+						  String signer = note.getSigner();
+						  String title = note.getItemValueString("$TITLE");
+						  if (title.length()==0) { title = "(title not found for note " + nid + ")"; }
+						  
+						  signers.put(title, signer);
+						  
+						  note.recycle();
+					  }
+
+				}
+
+				  
+				nid = nc.getNextNoteID(nid);
+			}
+			
+		} catch (NotesException e) {
+			this.error(e);
+		} finally {
+			try {
+				if (nc != null) { nc.recycle(); }
+			} catch (NotesException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		this.dump(signers);
+
+	}
+	
 	public Object getDumpObject() {
 		return dumpObject;
 	}
@@ -235,6 +298,10 @@ public class DebugToolbar implements Serializable {
 	}
 	public void init(boolean defaultCollapsed) {
 		this.init(defaultCollapsed, null);
+	}
+	
+	public boolean isDesigner() {
+		return this.accessLevel >= ACL.LEVEL_DESIGNER;
 	}
 	
 	public static boolean hideDetails( String entryName) {
@@ -452,6 +519,10 @@ public class DebugToolbar implements Serializable {
 	
 			this.messages.add(0, message);
 			
+			if (message.isError()) {
+				numErrors++;
+			}
+			
 			if (messages.size() > DebugToolbar.MAX_MESSAGES) {
 				messages.remove(messages.size() - 1); // remove oldest element
 			}
@@ -502,6 +573,7 @@ public class DebugToolbar implements Serializable {
 	// clear all debug log messages
 	public void clearMessages() {
 		messages.clear();
+		numErrors = 0;
 	}
 
 	/*************************************
@@ -769,7 +841,14 @@ public class DebugToolbar implements Serializable {
 	}
 
 	public boolean hasMessages() {
-		return messages.size() > 0;
+		return this.messages.size() > 0;
+	}
+	
+	public int getNumMessages() {
+		return this.messages.size();
+	}
+	public int getNumErrors() {
+		return this.numErrors;
 	}
 
 	/**
@@ -814,64 +893,68 @@ public class DebugToolbar implements Serializable {
 	public String getConsolePath() {
 		return consolePath;
 	}
- 	
 	
 	@SuppressWarnings("unchecked")
-	public ArrayList<Entry<String, String>> getCustomVars() {
+	public ArrayList<Entry<String, String>> getCustomVars( String type ) {
 
 		ArrayList customVars = new ArrayList<Entry<String,String>>();
 
 		try {
 
 			XSPContext context = XSPContext.getXSPContext(FacesContext.getCurrentInstance());
-			
-			DirectoryUser currentUser = context.getUser();
 
-			Name n = getSession().createName(effectiveUserName);
-			Vector<String> groups = new Vector(currentUser.getGroups());
-			groups.remove(effectiveUserName);
-			groups.remove(n.getCommon());
+			if (type.equals("user")) {
+				
+				DirectoryUser currentUser = context.getUser();
+				
+				Name n = getSession().createName(effectiveUserName);
+				Vector<String> groups = new Vector(currentUser.getGroups());
+				groups.remove(effectiveUserName);
+				groups.remove(n.getCommon());
 			
-			extLibVersion = getExtLibVersion();
+				customVars.add( new AbstractMap.SimpleEntry("username", effectiveUserName));
+				customVars.add( new AbstractMap.SimpleEntry("access level", getReadableAccessLevel(accessLevel)));
 			
-			ExternalContext extCon = FacesContext.getCurrentInstance().getExternalContext();
-			
-			HttpServletRequest httpServletRequest = (HttpServletRequest) extCon.getRequest();
-			
-			customVars.add( new AbstractMap.SimpleEntry("title", "User"));
-			customVars.add( new AbstractMap.SimpleEntry("username", effectiveUserName));
-			customVars.add( new AbstractMap.SimpleEntry("access level", getReadableAccessLevel(getCurrentDatabase().getCurrentAccessLevel())));
-			
-			customVars.add( new AbstractMap.SimpleEntry("roles", (userRoles.size()>0 ? userRoles.toString() : "(no roles enabled)") ));
-			customVars.add( new AbstractMap.SimpleEntry("groups", (groups.size()>0 ? groups.toString() : "(user not listed in any group)")));
+				customVars.add( new AbstractMap.SimpleEntry("roles", (userRoles.size()>0 ? userRoles.toString() : "(no roles enabled)") ));
+				customVars.add( new AbstractMap.SimpleEntry("groups", (groups.size()>0 ? groups.toString() : "(user not listed in any group)")));
 
-			customVars.add( new AbstractMap.SimpleEntry("title", "Browser"));
-			customVars.add( new AbstractMap.SimpleEntry("name", context.getUserAgent().getBrowser() + " " + context.getUserAgent().getBrowserVersion()));
-			customVars.add( new AbstractMap.SimpleEntry("user agent", context.getUserAgent().getUserAgent()));
-			customVars.add( new AbstractMap.SimpleEntry("language", context.getLocale().getDisplayName()	+ " (" + context.getLocaleString() + ")"));
-			customVars.add( new AbstractMap.SimpleEntry("timezone", context.getTimeZoneString()));
-
-			customVars.add( new AbstractMap.SimpleEntry("title", "Server") );
-			customVars.add( new AbstractMap.SimpleEntry("name", getCurrentDatabase().getServer() ) );
-			customVars.add( new AbstractMap.SimpleEntry("version", notesVersion ) );
-			customVars.add( new AbstractMap.SimpleEntry("platform", getSession().getPlatform() ) );
-			customVars.add( new AbstractMap.SimpleEntry("extension library version", extLibVersion ) );
-			
-			customVars.add( new AbstractMap.SimpleEntry("title", "Database") );
-			customVars.add( new AbstractMap.SimpleEntry("name", currentDbTitle ) );
-			customVars.add( new AbstractMap.SimpleEntry("path", currentDbFilePath ) );
-			
-			
-			customVars.add( new AbstractMap.SimpleEntry("size", DebugToolbar.getReadableSize( (long) getCurrentDatabase().getSize())));
-			customVars.add( new AbstractMap.SimpleEntry("created", getCurrentDatabase().getCreated().toString()) );
-			customVars.add( new AbstractMap.SimpleEntry("last modified", getCurrentDatabase().getLastModified().toString()));
-			customVars.add( new AbstractMap.SimpleEntry("full text indexed?", (getCurrentDatabase().isFTIndexed() ? "yes (last update: " + getCurrentDatabase().getLastFTIndexed().toString() + ")" : "no")));
-
-			customVars.add( new AbstractMap.SimpleEntry("title", "Request"));
-			customVars.add( new AbstractMap.SimpleEntry("query string", context.getUrl().getQueryString()));
-			customVars.add( new AbstractMap.SimpleEntry("remote address", httpServletRequest.getRemoteAddr()));
-			
-			customVars.add( new AbstractMap.SimpleEntry("cookies", getCookieDump(extCon.getRequestCookieMap()) ));
+			} else if (type.equals("browser") ) {
+				
+				customVars.add( new AbstractMap.SimpleEntry("name", context.getUserAgent().getBrowser() + " " + context.getUserAgent().getBrowserVersion()));
+				customVars.add( new AbstractMap.SimpleEntry("user agent", context.getUserAgent().getUserAgent()));
+				customVars.add( new AbstractMap.SimpleEntry("language", context.getLocale().getDisplayName()	+ " (" + context.getLocaleString() + ")"));
+				customVars.add( new AbstractMap.SimpleEntry("timezone", context.getTimeZoneString()));
+				
+			} else if (type.equals("server") ) {
+				
+				extLibVersion = getExtLibVersion();
+				
+				customVars.add( new AbstractMap.SimpleEntry("name", getCurrentDatabase().getServer() ) );
+				customVars.add( new AbstractMap.SimpleEntry("version", notesVersion ) );
+				customVars.add( new AbstractMap.SimpleEntry("platform", getSession().getPlatform() ) );
+				customVars.add( new AbstractMap.SimpleEntry("extension library version", extLibVersion ) );
+				
+			} else if (type.equals("database")) {
+				
+				customVars.add( new AbstractMap.SimpleEntry("name", currentDbTitle ) );
+				customVars.add( new AbstractMap.SimpleEntry("path", currentDbFilePath ) );
+				
+				customVars.add( new AbstractMap.SimpleEntry("size", DebugToolbar.getReadableSize( (long) getCurrentDatabase().getSize())));
+				customVars.add( new AbstractMap.SimpleEntry("created", getCurrentDatabase().getCreated().toString()) );
+				customVars.add( new AbstractMap.SimpleEntry("last modified", getCurrentDatabase().getLastModified().toString()));
+				customVars.add( new AbstractMap.SimpleEntry("full text indexed?", (getCurrentDatabase().isFTIndexed() ? "yes (last update: " + getCurrentDatabase().getLastFTIndexed().toString() + ")" : "no")));
+		
+			} else if (type.equals("request") ) {
+				
+				ExternalContext extCon = FacesContext.getCurrentInstance().getExternalContext();
+				
+				HttpServletRequest httpServletRequest = (HttpServletRequest) extCon.getRequest();
+				
+				customVars.add( new AbstractMap.SimpleEntry("query string", context.getUrl().getQueryString()));
+				customVars.add( new AbstractMap.SimpleEntry("remote address", httpServletRequest.getRemoteAddr()));
+				
+				customVars.add( new AbstractMap.SimpleEntry("cookies", getCookieDump(extCon.getRequestCookieMap()) ));
+			}
 
 		} catch (Exception e) {
 			error(e, "getCustomVars");
@@ -1492,7 +1575,7 @@ public class DebugToolbar implements Serializable {
 			
 			docLog.replaceItemValue("LogFromAgent", fromPage);
 			
-			docLog.replaceItemValue("LogAccessLevel", getReadableAccessLevel( getCurrentDatabase().getCurrentAccessLevel() ) );
+			docLog.replaceItemValue("LogAccessLevel", getReadableAccessLevel( accessLevel ) );
 			docLog.replaceItemValue("LogUserRoles", userRoles );
 			docLog.replaceItemValue("LogClientVersion", notesVersion );
 
@@ -1587,7 +1670,5 @@ public class DebugToolbar implements Serializable {
 		return result;
 		
 	}
-
-
-	
+		
 }
