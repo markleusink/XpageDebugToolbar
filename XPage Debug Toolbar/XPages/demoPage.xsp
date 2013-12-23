@@ -396,6 +396,16 @@ The configuration options for the persistent logging feature are:<br />
 	<xp:div id="pnlNew" style="margin: 10px;">
 		<h2>What's new</h2>
 		
+		<p style="margin-top:15px;">v3.01
+		<ul>
+		<li>Files tab didn't work in Domino 9 due to updated Dojo version</li>
+		<li>Renamed messages repeat variable</li>
+		<li>Added selection formula to Events view</li>
+		<li>Updated return message in Inspector when 'null' is returned</li>
+		<li>Added project links to About tab</li>
+		</ul>
+		</p>
+		
 		<p style="margin-top:15px;">
 			v3
 			<ul>

@@ -72,7 +72,7 @@
 			padding: 0; position: relative; vertical-align: top;
 			margin-right: 2px;
 
-			} div.dBar ul.links a { color: #ffffff; font-weight: bold; border-left: 1px solid transparent; border-right: 1px
+			} div.dBar ul.links a { color: #ffffff; font-weight: normal; border-left: 1px solid transparent; border-right: 1px
 			solid transparent; display: block; padding: 0 5px; position:
 			relative; }
 			div.dBar ul.links a:hover, div.dBar ul.links a.selected { background: #9B9B9B; text-decoration: none; }
@@ -160,7 +160,7 @@
 				padding: 15px; 
 				width: 450px; 
 				color: #fff;
-				background: #38375B;
+				background: #161E7A;
 				-moz-box-shadow: 3px 3px 5px #000000;
 			    -webkit-box-shadow: 3px 3px 5px #000000;
 			    box-shadow: 3px 3px 5px #000000;
@@ -199,7 +199,6 @@
 		</xp:text>
 		
 		<xp:div id="debugToolbar" styleClass="dBar">
-
 			<xp:div styleClass="bg" rendered="#{dBar.collapsed}">
 				<xp:this.style><![CDATA[#{javascript:"position: absolute; " +
 (compositeData.collapseTo == "right" ? "right: 0;" : "left: 0;")}]]></xp:this.style>
@@ -207,8 +206,8 @@
 
 					<!-- expand link -->
 					<li>
-						<xp:link escape="false" id="link8" style="font-weight: normal;" title="expand the debug toolbar">
-							<xp:this.text><![CDATA[#{javascript:var messageText = "(" + dBar.getNumErrors() + "/" + dBar.getNumMessages() + ")";
+						<xp:link escape="false" id="link8" title="expand the debug toolbar">
+							<xp:this.text><![CDATA[#{javascript:var messageText = (dBar.getNumMessages() == 0 ? "" : " (" + dBar.getNumMessages() + "/" + dBar.getNumErrors() + ")");
 
 (compositeData.collapseTo == "right" ? "<< " + messageText : messageText + " >>")}]]></xp:this.text>
 							<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="debugToolbar" immediate="true"
@@ -226,7 +225,7 @@
 
 				<div style="float:right">
 					<ul class="links">
-
+					
 						<!-- about the toolbar -->
 						<li>
 							<xp:link escape="false" id="link12"
@@ -279,8 +278,7 @@
 					<li>
 						<xp:link escape="false" id="linkTabMessages">
 							<xp:this.styleClass><![CDATA[#{javascript:("messages".equals( dBar.getActiveTab() ) ? "selected" : "")}]]></xp:this.styleClass>
-							<xp:this.text><![CDATA[#{javascript:"messages " + 
-							"(" + dBar.getNumErrors() + "/" + dBar.getNumMessages() + ")";
+							<xp:this.text><![CDATA[#{javascript:"messages (" + dBar.getNumMessages() + "/" + dBar.getNumErrors() + ")";
 }]]></xp:this.text>
 							<xp:eventHandler event="onclick" submit="true" refreshMode="partial" refreshId="debugToolbar" execMode="partial"
 								execId="debugToolbar" immediate="true">
@@ -966,7 +964,7 @@ r
 										)
 							</td>
 							<td><xp:comboBox id="componentId" value="#{dBar.inspectorSelectedComponentId}">
-								<xp:selectItem itemValue="" itemLabel="" />
+								<xp:selectItem itemValue="" itemLabel="select a component" />
 								<xp:selectItems value="#{dBar.componentIds}" />
 								<xp:eventHandler event="onchange" submit="true"
 									refreshMode="partial" refreshId="inspector" disableValidators="true">
@@ -982,7 +980,29 @@ r
 										submit="true" refreshMode="partial" refreshId="componentId"
 										disableValidators="true" execMode="partial" execId="inspector">
 									</xp:eventHandler>
-								</xp:checkBox>
+								</xp:checkBox><br />
+								<xp:repeat
+									id="repeat2"
+									rows="30"
+									style="margin-top:3px"
+									var="inspectEntry">
+									<xp:this.value><![CDATA[#{javascript:["view", "context", "facesContext", "database", "session"];}]]></xp:this.value>
+									<xp:link
+										style="margin-right: 5px"
+										escape="true"
+										text="#{inspectEntry}"
+										id="link19">
+										<xp:eventHandler
+											event="onclick"
+											submit="true"
+											refreshMode="partial"
+											refreshId="debugToolbar"
+											disableValidators="true">
+											<xp:this.action><![CDATA[#{javascript:dBar.setInspectorExpression(inspectEntry)}]]></xp:this.action>
+										</xp:eventHandler>
+									</xp:link>
+								</xp:repeat>
+
 							</td>
 							
 							<td style="padding-left: 20px">
@@ -1311,7 +1331,7 @@ dBar.addInspectorExpressionComponent(c);}]]></xp:this.action>
 
 	<!-- missing required managed bean message -->
 	<xp:div
-		style="position: absolute; z-index: 10000; color: #ffffff; background: #38375B; font-size: 11px; width: 100%; top: 0; left:0; padding: 10px;">
+		style="position: absolute; z-index: 10000; color: #ffffff; background: #161E7A; font-size: 11px; width: 100%; top: 0; left:0; padding: 10px;">
 		<xp:this.loaded><![CDATA[${javascript:typeof dBar == "undefined"}]]></xp:this.loaded>
 		
 		<xp:text escape="false" disableTheme="true" id="computedField1">

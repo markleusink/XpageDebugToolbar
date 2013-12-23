@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +77,7 @@ public class DebugToolbar implements Serializable {
 	public static final String		BEAN_NAME 				= "dBar";
 	private static final String 	LOG_FILE_CONTENTS 		= "logFileContents";
 	private static final String 	LOG_FILE_SELECTED 		= "logFileSelected";
-	private static final String		DEFAULT_TOOLBAR_COLOR	= "#38375B";
+	private static final String		DEFAULT_TOOLBAR_COLOR	= "#161E7A";
 	
 	private static final int 		MAX_MESSAGES 			= 2000;		//maximum number of message held in this class
 	private static final long  		LOG_FILE_SIZE_LIMIT_MB 	= 2;		//log file size limit (in MB)
@@ -184,11 +185,9 @@ public class DebugToolbar implements Serializable {
 			
 			accessLevel = dbCurrent.getCurrentAccessLevel();
 			
-			XSPContext context = XSPContext.getXSPContext(FacesContext.getCurrentInstance());
-			
 			userName = getSession().getUserName();
 			effectiveUserName = getSession().getEffectiveUserName();
-			userRoles = new Vector<String>(context.getUser().getRoles());
+			userRoles = dbCurrent.queryAccessRoles(effectiveUserName);
 			
 			notesVersion = getSession().getNotesVersion();
 			
@@ -229,7 +228,7 @@ public class DebugToolbar implements Serializable {
 	public void dumpNoteSigners() {
 		
 		NoteCollection nc = null;
-		TreeMap<String, String> signers = new TreeMap<String, String>();
+		TreeMap<String, String> elementSigners = new TreeMap<String, String>();
 		
 		try {
 			
@@ -237,6 +236,8 @@ public class DebugToolbar implements Serializable {
 			nc = dbCurrent.createNoteCollection(false);
 			nc.selectAllDesignElements(true);
 			nc.buildCollection();
+			
+			ArrayList<String> signers = new ArrayList<String>();
 			
 			this.debug("started retrieving all signers for " + nc.getCount() + " design elements");
 			  
@@ -250,10 +251,18 @@ public class DebugToolbar implements Serializable {
 					  if (note != null) {
 		
 						  String signer = note.getSigner();
-						  String title = note.getItemValueString("$TITLE");
-						  if (title.length()==0) { title = "(title not found for note " + nid + ")"; }
+						  if (StringUtil.isEmpty(signer) ) {
+							  signer = "(not signed)";
+						  } else {
+							  signers.add(signer);
+						  }
 						  
-						  signers.put(title, signer);
+						  String title = note.getItemValueString("$TITLE");
+						  if (StringUtil.isEmpty(title) ) { 
+							  title = "(title not found for note " + nid + ")";
+						  }
+						  
+						  elementSigners.put(title, signer);
 						  
 						  note.recycle();
 					  }
@@ -264,6 +273,9 @@ public class DebugToolbar implements Serializable {
 				nid = nc.getNextNoteID(nid);
 			}
 			
+			this.dump(elementSigners);
+			this.debug("number of signers: " + (new HashSet<String>(signers)).size() );
+			
 		} catch (NotesException e) {
 			this.error(e);
 		} finally {
@@ -273,8 +285,6 @@ public class DebugToolbar implements Serializable {
 				e.printStackTrace();
 			}
 		}
-		
-		this.dump(signers);
 
 	}
 	
@@ -849,6 +859,9 @@ public class DebugToolbar implements Serializable {
 	}
 	public int getNumErrors() {
 		return this.numErrors;
+	}
+	public boolean hasErrors() {
+		return this.numErrors > 0;
 	}
 
 	/**

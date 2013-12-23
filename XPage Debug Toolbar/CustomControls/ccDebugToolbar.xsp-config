@@ -47,8 +47,8 @@ right</editor-parameter>
     </property>
     <description>XPage Debug Toolbar (by Mark Leusink)</description>
     <icon>
-      <small-icon>/icons/bug16.png</small-icon>
-      <large-icon>/icons/bug23.png</large-icon>
+      <small-icon>/WebContent/dBarIcons/bug16.png</small-icon>
+      <large-icon>/WebContent/dBarIcons/bug23.png</large-icon>
     </icon>
     <property>
       <property-name>toolbarColor</property-name>
