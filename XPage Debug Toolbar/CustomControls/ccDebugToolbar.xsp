@@ -170,7 +170,6 @@
 				text-decoration: underline;
 			}
 			div.dBar .aboutMe td {
-				font-weight:bold;
 				vertical-align: middle;
 			}
 			div.dBar .aboutMe img {
@@ -229,7 +228,7 @@
 						<!-- about the toolbar -->
 						<li>
 							<xp:link escape="false" id="link12"
-								style="font-weight: normal" text="about">
+								text="about">
 								<xp:this.styleClass><![CDATA[#{javascript:(dBar.getActiveTab().equals("about") ? "selected" : "")}]]></xp:this.styleClass>
 
 								<xp:eventHandler event="onclick"
@@ -243,7 +242,6 @@
 						<!-- remove the toolbar -->
 						<li>
 							<xp:link escape="false" id="link23"
-								style="font-weight: normal"
 								title="remove the toolbar for the current session"
 								text="remove">
 
@@ -263,7 +261,7 @@
 					<!-- collapse -->
 					<li>
 						<xp:link escape="false" id="linkCollapse"
-							style="font-weight: normal" title="collapse the debug toolbar">
+							title="collapse the debug toolbar">
 							<xp:this.text><![CDATA[#{javascript:(compositeData.collapseTo == "right" ? ">>" : "<<")}]]></xp:this.text>
 
 							<xp:eventHandler event="onclick"
@@ -1260,12 +1258,13 @@ dBar.addInspectorExpressionComponent(c);}]]></xp:this.action>
 								<tr>
 								<td><img width="80" height="80" src="http://secure.gravatar.com/avatar/80b0217f17f01b662fe26275fd625584?size=80" title="Hi !" alt="Hi !" /></td>
 								<td>
-									The XPage Debug Toolbar (version 3) is created and maintained by Mark Leusink. Download the latest release from&#160;<xp:link text="OpenNTF" target="_blank">
+									The XPage Debug Toolbar is created and maintained by Mark Leusink. Download the latest release from&#160;<xp:link text="OpenNTF" target="_blank">
 			<xp:this.value><![CDATA[http://www.openntf.org/internal/home.nsf/project.xsp?action=openDocument&name=XPage%20Debug%20Toolbar]]></xp:this.value>
 		</xp:link>&#160;or the source directly from&#160;
 		<xp:link text="GitHub" target="_blank">
 			<xp:this.value><![CDATA[https://github.com/markleusink/XpageDebugToolbar]]></xp:this.value>
 		</xp:link>.<br />
+		This project is also part of the&#160;<a href="http://essentials.openntf.org" target="_blank">OpenNTF Essentials</a>.<br />
 									<br />
 										<a target="_blank" href="http://linqed.eu">
 											blog
