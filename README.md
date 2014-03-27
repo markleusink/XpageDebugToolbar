@@ -1,8 +1,8 @@
-** IMPORTANT **
+#### IMPORTANT
 
 The XPages Debug Toolbar has been packaged as a plugin and is now maintained in the OpenNTF repository on GitHub (http://www.github.com/openntf/debugtoolbar).
 
-** What's new in version 3 of the XPage Debug Toolbar **
+#### What's new in version 3 of the XPage Debug Toolbar
 
 - New feature: external logging
 	- Stores messages written to the toolbar in documents in a database, (optional) including messages thrown by the XPages runtime in an error page.
@@ -31,7 +31,7 @@ The XPages Debug Toolbar has been packaged as a plugin and is now maintained in 
 - Removed "Timers" tab
 	- startTimer() en stopTimer() are now deprecated (replaced by debug() calls)
 	
-IMPORTANT: the dBar managed bean property "enabled" has been renamed to "toolbarVisible" and defaults to false. Normally you don't need to use this property: it is automatically set when the toolbar is rendered in a browser. This is done so you can leave all dBar.someFunction() calls intact when moving an applicationn to production. If the toolbarVisible property remains false, the calls won't do anything (and thus have no negative impact on your application's performance). The toolbarVisible property works independant from any configured external logging database, so you can still have external logging of (for instance) only warnings and errors without showing the toolbar at all (or only showing it to users with the [debug] role).
+The dBar managed bean property "enabled" has been renamed to "toolbarVisible" and defaults to false. Normally you don't need to use this property: it is automatically set when the toolbar is rendered in a browser. This is done so you can leave all dBar.someFunction() calls intact when moving an applicationn to production. If the toolbarVisible property remains false, the calls won't do anything (and thus have no negative impact on your application's performance). The toolbarVisible property works independant from any configured external logging database, so you can still have external logging of (for instance) only warnings and errors without showing the toolbar at all (or only showing it to users with the [debug] role).
 
 There's 1 downside to this: the toolbarVisible property is automatically set to true in the ccDebugToolbar's beforPageLoad event (since the toolbar is loaded) so any dBar.XXX calls in the calling XPages's beforePageLoad event won't have an effect. To change this behaviour, you can set the property as a managed property in the dBar bean configuration.
 	
