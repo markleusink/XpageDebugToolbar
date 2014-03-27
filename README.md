@@ -1,4 +1,8 @@
-What's new in version 3 of the XPage Debug Toolbar
+** IMPORTANT **
+
+The XPages Debug Toolbar has been packaged as a plugin and is now maintained in the OpenNTF repository on GitHub (http://www.github.com/openntf/debugtoolbar).
+
+** What's new in version 3 of the XPage Debug Toolbar **
 
 - New feature: external logging
 	- Stores messages written to the toolbar in documents in a database, (optional) including messages thrown by the XPages runtime in an error page.
